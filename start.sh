@@ -1,0 +1,1 @@
+docker run --name polsl-prior-container polsl-prior
