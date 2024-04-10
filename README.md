@@ -15,3 +15,10 @@ pkarmanski - 10.04.2024 ver 1.0.0:
 - created example of work flow
 - added frame with directories and classes for project
 - added short descriptions what classes supposed to do
+
+
+bl4szk4 - 10.04.2024 ver 1.0.0:
+- created directory utils with yaml_manager to handle configuration from [yaml file](config.yaml)
+- created [directory](app/messages) and added two files for storing info and error codes about stage
+- imported [package](app/stage/x64) provided by Prior
+- started work with [stage](app/stage/daos/stage_dao.py)

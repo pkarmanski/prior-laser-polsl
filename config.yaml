@@ -1,0 +1,3 @@
+stage_params:
+  path: ./app/stage/x64/PriorScientificSDK.dll
+  COM: 6
