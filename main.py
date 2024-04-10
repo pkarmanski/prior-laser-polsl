@@ -1,5 +1,4 @@
-import logging
+from app.presentation.window_controller import WindowController
 
 if __name__ == "__main__":
-    print("HELLO WORLD")
-
+    WindowController().run()

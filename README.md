@@ -7,8 +7,11 @@
 4. Recommend to install GitToolBox because it automatically makes fetch. 
 5. Note that besides using docker you need to have same environment in your IDE otherwise it will not give you warnings about code mistakes
 6. We are using python3.12.2
+7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
 ### Example of readme update
 pkarmanski - 10.04.2024 ver 1.0.0:
 - imported [library](main.py:1) (it is just an example how to write about update you don't really need to write about every package you have imported)
 - created example of work flow
+- added frame with directories and classes for project
+- added short descriptions what classes supposed to do
