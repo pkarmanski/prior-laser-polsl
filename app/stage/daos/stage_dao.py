@@ -4,7 +4,7 @@ Class for directly accessing stage
 
 import logging
 
-from app.stage.daos.stage.stage import Stage
+from app.stage.daos.stage import Stage
 from app.utils.yaml_manager import YamlData
 
 
