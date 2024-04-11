@@ -7,7 +7,7 @@ from app.stage.errors.errors import StageConnectionError, StageOpenSessionError,
     StageExecuteError
 
 
-class Stage:
+class StageConnector:
     """
     Attributes:
         :arg __yaml_data: YamlData() instance to get data from a yaml file
