@@ -3,7 +3,8 @@ from ctypes import create_string_buffer, WinDLL
 
 from app.messages.error_messages import StageErrorMsg
 from app.messages.info_messages import StageInfoMsg
-from app.stage.errors.errors import StageConnectionError, StageOpenSessionError, StageCloseSessionError
+from app.stage.errors.errors import StageConnectionError, StageOpenSessionError, StageCloseSessionError, \
+    StageExecuteError
 
 
 class Stage:
@@ -50,5 +51,16 @@ class Stage:
         else:
             self.__logger.info(f"Session closed: {return_status}")
 
-    def execute(self):
-        pass
+    def execute(self, message: str):
+        self.__logger.info(f"Executed message: {message}")
+        return_status = self.__SDKPrior.PriorScientificSDK_cmd(self.__session_id,
+                                                               create_string_buffer(message.encode()),
+                                                               self.__read_buffer)
+        if return_status:
+            self.__logger.critical(f"Api error {return_status}")
+            raise StageExecuteError(str(return_status))
+        else:
+            self.__logger.info(f"Success {self.__read_buffer.value.decode()}")
+        # TODO think if return is needed
+        # input("Press ENTER to continue...")
+        # return return_status, self.__read_buffer.value.decode()
