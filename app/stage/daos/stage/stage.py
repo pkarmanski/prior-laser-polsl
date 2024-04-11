@@ -11,7 +11,7 @@ class Stage:
     Attributes:
         :arg __yaml_data: YamlData() instance to get data from a yaml file
         :arg __read_buffer: buffer for communication with stage
-        :arg com_port: com port in computer to communicate with stage
+        :arg __com_port: com port in computer to communicate with stage
         :arg __SDKPrior: instance of stage
         :arg __session_id: stores session id of current session
     """

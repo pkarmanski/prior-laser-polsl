@@ -10,6 +10,9 @@
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
 ### Example of readme update
+bl4szk4 - 11.04.2024 ver 1.0.1:
+- added enum with [stage errors](app/stage/enums/error_codes.py)
+
 pkarmanski - 11.04.2024 ver 1.0.1:
 - added version to [main.py](main.py:3) please update it if you make any change on dev branch
 - moved functions responsible for connection to class [Stage](app/stage/daos/stage/stage.py:9) from StageDAO
