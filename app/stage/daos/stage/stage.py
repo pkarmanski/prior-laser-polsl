@@ -29,26 +29,26 @@ class Stage:
         self.__SDKPrior = WinDLL(self.__stage_dll_path)
         return_status = self.__SDKPrior.PriorScientificSDK_Initialise()
         if return_status:
-            self.__logger.critical(StageErrorMsg.PRIOR_INITIALIZATION_ERROR.description.format(return_status))
+            self.__logger.critical(f"Prior initialization error: {return_status}")
             raise StageConnectionError(str(return_status))
         else:
-            self.__logger.info(StageInfoMsg.PRIOR_INITIALIZED.description.format(return_status))
+            self.__logger.info(f"Prior initialized: {return_status}")
 
     def open_session(self):
         self.__session_id = self.__SDKPrior.PriorScientificSDK_OpenNewSession()
         if self.__session_id < 0:
-            self.__logger.critical(StageErrorMsg.PRIOR_SESSION_ERROR.description.format(self.__session_id))
+            self.__logger.critical(f"Open session error: {self.__session_id}")
             raise StageOpenSessionError(str(self.__session_id))
         else:
-            self.__logger.info(StageInfoMsg.PRIOR_SESSION_CREATED.description.format(self.__session_id))
+            self.__logger.info(f"Session opened: {self.__session_id}")
 
     def close_session(self):
         return_status = self.__SDKPrior.PriorScientificSDK_CloseSession(self.__session_id)
         if return_status:
-            self.__logger.critical(StageErrorMsg.PRIOR_SESSION_ERROR.description.format(return_status))
+            self.__logger.critical(f"Session close error: {return_status}")
             raise StageCloseSessionError(str(return_status))
         else:
-            self.__logger.info(StageInfoMsg.PRIOR_SESSION_CREATED.description.format(return_status))
+            self.__logger.info(f"Session closed: {return_status}")
 
     def execute(self):
         pass
