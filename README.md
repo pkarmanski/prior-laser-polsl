@@ -13,6 +13,7 @@
 pkarmanski - 11.04.2024 ver 1.0.1:
 - added version to [main.py](main.py:3) please update it if you make any change on dev branch
 - moved functions responsible for connection to class [Stage](app/stage/daos/stage/stage.py:9) from StageDAO
+- attached log config file to logging package
 
 bl4szk4 - 10.04.2024 ver 1.0.0:
 - created directory utils with yaml_manager to handle configuration from [yaml file](config.yaml)
