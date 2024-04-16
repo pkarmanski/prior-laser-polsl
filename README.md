@@ -11,7 +11,7 @@
 
 ### Example of readme update
 
-pkarmanski - 16.04.2024 ver 1.0.4:
+pkarmanski, bl4szk4 - 16.04.2024 ver 1.0.4:
 - added stage commands enum class and factory for it
 - create initialize stage methods like connect, open_session, close_session in StageDAO
 

@@ -39,6 +39,7 @@ class StageConnector:
             raise StageOpenSessionError(str(self.__session_id))
         else:
             self.__logger.info(f"Session opened: {self.__session_id}")
+            return self.execute(CommandsFactory.connect_stage(com))
 
     def close_session(self):
         return_status = self.__SDKPrior.PriorScientificSDK_CloseSession(self.__session_id)
@@ -48,7 +49,7 @@ class StageConnector:
         else:
             self.__logger.info(f"Session closed: {return_status}")
 
-    def execute(self, message: str):
+    def execute(self, message: str) -> str:
         self.__logger.info(f"Executed message: {message}")
         return_status = self.__SDKPrior.PriorScientificSDK_cmd(self.__session_id,
                                                                create_string_buffer(message.encode()),
