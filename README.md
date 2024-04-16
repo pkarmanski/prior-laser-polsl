@@ -10,6 +10,10 @@
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
 ### Example of readme update
+
+pkarmanski - 16.04.2024 ver 1.0.4:
+- added stage commands enum class and factory for it
+
 bl4szk4 - 11.04.2024 ver 1.0.1:
 - added enum with [stage errors](app/stage/enums/error_codes.py)
 
