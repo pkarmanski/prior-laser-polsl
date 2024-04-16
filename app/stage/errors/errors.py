@@ -1,3 +1,6 @@
+from app.stage.enums.error_codes import StageErrorCodes
+
+
 class StageConnectionError(Exception):
     def __init__(self, msg: int):
         self.msg = msg
@@ -27,4 +30,4 @@ class StageExecuteError(Exception):
         self.msg = msg
 
     def __str__(self):
-        return self.msg
+        return StageErrorCodes.get_stage_error(self.msg)

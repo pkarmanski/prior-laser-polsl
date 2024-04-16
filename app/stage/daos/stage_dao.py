@@ -42,17 +42,46 @@ class StageDAO:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_CONNECT_ERROR,
                                                                 description=str(err), return_status=err.msg))
 
-    def close_session(self) -> StageResponse:
+    def close_session(self, close_normally: bool = True) -> StageResponse:
         try:
+            if close_normally:
+                self.__stage.disconnect_stage(self.__com_port)
             return_status = self.__stage.close_session()
             return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
         except (StageOpenSessionError, StageExecuteError) as err:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
 
+    def goto_position(self, x: int, y: int) -> StageResponse:
+        try:
+            command = CommandsFactory.goto_position(x, y)
+            return_status = self.__stage.execute(command)
+            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+        except StageExecuteError as err:
+            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
+                                                                return_status=err.msg))
+
     def move_at_velocity(self, x: int, y: int) -> StageResponse:
         try:
             command = CommandsFactory.move_at_velocity(x, y)
+            return_status = self.__stage.execute(command)
+            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+        except StageExecuteError as err:
+            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
+                                                                return_status=err.msg))
+
+    def check_stage_limits(self) -> StageResponse:
+        try:
+            command = CommandsFactory.get_limits()
+            return_status = self.__stage.execute(command)
+            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+        except StageExecuteError as err:
+            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
+                                                                return_status=err.msg))
+
+    def set_position(self, x: int, y: int) -> StageResponse:
+        try:
+            command = CommandsFactory.setr_position(x, y)
             return_status = self.__stage.execute(command)
             return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:

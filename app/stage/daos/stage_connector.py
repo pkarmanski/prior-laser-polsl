@@ -49,6 +49,9 @@ class StageConnector:
         else:
             self.__logger.info(f"Session closed: {return_status}")
 
+    def disconnect_stage(self, com: int) -> str:
+        return self.execute(CommandsFactory.disconnect_stage(com))
+
     def execute(self, message: str) -> str:
         self.__logger.info(f"Executed message: {message}")
         return_status = self.__SDKPrior.PriorScientificSDK_cmd(self.__session_id,

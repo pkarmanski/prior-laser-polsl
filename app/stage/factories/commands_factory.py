@@ -48,12 +48,12 @@ class CommandsFactory:
         return ControlCommands.STAGE_BUSY_GET.command
 
     @staticmethod
-    def position_get() -> str:
+    def get_position() -> str:
         return ControlCommands.STAGE_POSITION_GET.command
 
     # TODO test
     @staticmethod
-    def position_set(x: int, y: int) -> str:
+    def setr_position(x: int, y: int) -> str:
         return ControlCommands.STAGE_POSITION_SET.command.format(x, y)
 
     # TODO test
