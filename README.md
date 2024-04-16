@@ -13,6 +13,7 @@
 
 pkarmanski - 16.04.2024 ver 1.0.4:
 - added stage commands enum class and factory for it
+- create initialize stage methods like connect, open_session, close_session in StageDAO
 
 bl4szk4 - 11.04.2024 ver 1.0.1:
 - added enum with [stage errors](app/stage/enums/error_codes.py)

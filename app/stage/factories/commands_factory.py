@@ -4,8 +4,8 @@ from app.stage.enums.stage_commands import BasicCommands, ControlCommands
 class CommandsFactory:
 
     @staticmethod
-    def connect_stage() -> str:
-        return BasicCommands.CONNECT.command
+    def connect_stage(port: int) -> str:
+        return BasicCommands.CONNECT.command.format(port)
 
     @staticmethod
     def disconnect_stage() -> str:
@@ -51,14 +51,17 @@ class CommandsFactory:
     def position_get() -> str:
         return ControlCommands.STAGE_POSITION_GET.command
 
+    # TODO test
     @staticmethod
     def position_set(x: int, y: int) -> str:
         return ControlCommands.STAGE_POSITION_SET.command.format(x, y)
 
+    # TODO test
     @staticmethod
     def goto_position(x: int, y: int) -> str:
         return ControlCommands.STAGE_GOTO_POSITION.command.format(x, y)
 
+    # TODO test
     @staticmethod
     def move_relative(x: int, y: int) -> str:
         return ControlCommands.STAGE_MOVE_RELATIVE.command.format(x, y)
