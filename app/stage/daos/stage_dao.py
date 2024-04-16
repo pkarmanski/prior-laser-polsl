@@ -13,7 +13,7 @@ class StageDAO:
         self.__yaml_data = YamlData()
         self.__com_port = self.__yaml_data.get_stage_com_port()
         self.__logger = logging.getLogger(__name__)
-        self.__stage = Stage(self.__yaml_data.get_stage_ddl_path(), 1000, self.__com_port)
+        self.__stage = StageConnector(self.__yaml_data.get_stage_ddl_path(), 1000, self.__com_port)
 
 
 
