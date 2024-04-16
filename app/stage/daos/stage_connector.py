@@ -1,8 +1,6 @@
 import logging
 from ctypes import create_string_buffer, WinDLL
 
-from app.messages.error_messages import StageErrorMsg
-from app.messages.info_messages import StageInfoMsg
 from app.stage.errors.errors import StageConnectionError, StageOpenSessionError, StageCloseSessionError, \
     StageExecuteError
 
