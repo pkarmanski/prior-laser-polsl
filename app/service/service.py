@@ -9,6 +9,7 @@ from app.models.service_models import StageStatus
 from app.stage.daos.stage_dao import StageDAO
 from app.utils.utils import Utils
 from app.utils.yaml_manager import YamlData
+from typing import List
 
 
 class Service:

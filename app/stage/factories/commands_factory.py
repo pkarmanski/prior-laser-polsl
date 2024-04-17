@@ -28,7 +28,7 @@ class CommandsFactory:
         return BasicCommands.GET_SERIAL_NUMBER.command
 
     @staticmethod
-    def get_flat() -> str:
+    def get_flag() -> str:
         return BasicCommands.GET_FLAG.command
 
     @staticmethod
@@ -53,7 +53,7 @@ class CommandsFactory:
 
     # TODO test
     @staticmethod
-    def setr_position(x: int, y: int) -> str:
+    def set_position(x: int, y: int) -> str:
         return ControlCommands.STAGE_POSITION_SET.command.format(x, y)
 
     # TODO test

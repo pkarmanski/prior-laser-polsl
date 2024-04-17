@@ -62,8 +62,8 @@ class StageDAO:
                 self.__stage.execute(set_speed_command)
                 self.__actual_speed = speed
             command = CommandsFactory.goto_position(x, y)
-            return_status = self.__stage.execute(command)
-            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+            _ = self.__stage.execute(command)
+            return StageResponse[str](data="0", error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
@@ -80,8 +80,8 @@ class StageDAO:
     def check_stage_limits(self) -> StageResponse:
         try:
             command = CommandsFactory.get_limits()
-            return_status = self.__stage.execute(command)
-            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+            stage_limits = int(self.__stage.execute(command))
+            return StageResponse[int](data=stage_limits, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
