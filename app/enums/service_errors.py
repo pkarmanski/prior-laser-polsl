@@ -6,6 +6,7 @@ class ServiceError(Enum):
     STAGE_ERROR = (1, "STAGE_ERROR")
     STAGE_OPEN_SESSION_ERROR = (2, "STAGE_OPEN_SESSION_ERROR")
     STAGE_CONNECT_ERROR = (3, "STAGE_CONNECT_ERROR")
+    STAGE_CALIBRATION_ERROR = (4, "STAGE_CALIBRATION_ERROR")
 
     def __init__(self, code: int, description: str):
         self.__code = code

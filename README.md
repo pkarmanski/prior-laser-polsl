@@ -9,7 +9,14 @@
 6. We are using python3.12.2
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
-### Example of readme update
+### Changes
+
+pkarmanski, bl4szk4 - 17.04.2024 ver 1.0.5:
+- added serial to freeze.cfg for instalment
+- added method for getting available com list
+- added method for checking running status and position
+- added attributes to StageDAO for checking its status
+- added test file with random postition for further testing the methods
 
 pkarmanski, bl4szk4 - 16.04.2024 ver 1.0.4:
 - added stage commands enum class and factory for it

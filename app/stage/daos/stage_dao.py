@@ -3,7 +3,7 @@ Class for directly accessing stage
 """
 
 import logging
-from typing import Any
+from typing import Any, List
 
 from app.enums.service_errors import ServiceError
 from app.stage.daos.stage_connector import StageConnector
@@ -19,6 +19,9 @@ class StageDAO:
         self.__com_port = self.__yaml_data.get_stage_com_port()
         self.__logger = logging.getLogger(__name__)
         self.__stage = StageConnector(self.__yaml_data.get_stage_ddl_path(), 1000)
+        self.__actual_speed = 1000
+        self.running = False
+        self.position = (0, 0)
 
     def set_com_port(self, com_port: int):
         self.__com_port = com_port
@@ -52,8 +55,12 @@ class StageDAO:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
 
-    def goto_position(self, x: int, y: int) -> StageResponse:
+    def goto_position(self, x: int, y: int, speed: int) -> StageResponse:
         try:
+            if self.__actual_speed != speed:
+                set_speed_command = CommandsFactory.set_max_speed(speed)
+                self.__stage.execute(set_speed_command)
+                self.__actual_speed = speed
             command = CommandsFactory.goto_position(x, y)
             return_status = self.__stage.execute(command)
             return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
@@ -61,9 +68,9 @@ class StageDAO:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
 
-    def move_at_velocity(self, x: int, y: int) -> StageResponse:
+    def move_at_velocity(self, x_speed: int, y_speed: int) -> StageResponse:
         try:
-            command = CommandsFactory.move_at_velocity(x, y)
+            command = CommandsFactory.move_at_velocity(x_speed, y_speed)
             return_status = self.__stage.execute(command)
             return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
@@ -81,9 +88,30 @@ class StageDAO:
 
     def set_position(self, x: int, y: int) -> StageResponse:
         try:
-            command = CommandsFactory.setr_position(x, y)
+            command = CommandsFactory.set_position(x, y)
             return_status = self.__stage.execute(command)
             return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
+
+    def get_position(self) -> StageResponse[tuple]:
+        try:
+            command = CommandsFactory.get_position()
+            position = self.__stage.execute(command)  # TODO check behaviour
+            position = (int(coordinate) for coordinate in position.split(','))
+            return StageResponse[tuple](data=position, error=StageError(error=ServiceError.OK, description=""))
+        except StageExecuteError as err:
+            return StageResponse[tuple](data=(), error=StageError(error=ServiceError.STAGE_ERROR,
+                                                                  description=str(err),
+                                                                  return_status=err.msg))
+
+    def get_running(self) -> StageResponse[bool]:
+        try:
+            command = CommandsFactory.get_busy()
+            running = self.__stage.execute(command)  # TODO check behaviour
+            return StageResponse[bool](data=running == "0", error=StageError(error=ServiceError.OK, description=""))
+        except StageExecuteError as err:
+            return StageResponse[bool](data=(), error=StageError(error=ServiceError.STAGE_ERROR,
+                                                                 description=str(err),
+                                                                 return_status=err.msg))
