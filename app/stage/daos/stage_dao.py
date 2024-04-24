@@ -21,7 +21,7 @@ class StageDAO:
         self.__stage = StageConnector(self.__yaml_data.get_stage_ddl_path(), 1000)
         self.__actual_speed = 1000
         self.running = False
-        self.position = (0, 0)
+        self.position = [0, 0]
 
     def set_com_port(self, com_port: int):
         self.__com_port = com_port
@@ -95,14 +95,15 @@ class StageDAO:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))
 
-    def get_position(self) -> StageResponse[tuple]:
+    def get_position(self) -> StageResponse[List]:
         try:
             command = CommandsFactory.get_position()
             position = self.__stage.execute(command)  # TODO check behaviour
-            position = (int(coordinate) for coordinate in position.split(','))
-            return StageResponse[tuple](data=position, error=StageError(error=ServiceError.OK, description=""))
+            position = [int(coordinate) for coordinate in position.split(',')]
+            self.position = position
+            return StageResponse[List](data=position, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
-            return StageResponse[tuple](data=(), error=StageError(error=ServiceError.STAGE_ERROR,
+            return StageResponse[List](data=[], error=StageError(error=ServiceError.STAGE_ERROR,
                                                                   description=str(err),
                                                                   return_status=err.msg))
 
@@ -110,8 +111,8 @@ class StageDAO:
         try:
             command = CommandsFactory.get_busy()
             running = self.__stage.execute(command)  # TODO check behaviour
-            return StageResponse[bool](data=running == "0", error=StageError(error=ServiceError.OK, description=""))
+            return StageResponse[bool](data=running != "0", error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
-            return StageResponse[bool](data=(), error=StageError(error=ServiceError.STAGE_ERROR,
+            return StageResponse[bool](data=None, error=StageError(error=ServiceError.STAGE_ERROR,
                                                                  description=str(err),
                                                                  return_status=err.msg))

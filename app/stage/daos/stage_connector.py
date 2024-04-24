@@ -22,6 +22,7 @@ class StageConnector:
         self.__read_buffer = create_string_buffer(reading_buffer_size)
         self.__SDKPrior = None
         self.__session_id = None
+        self.__lock = Lock()
 
     def initialize(self):
         self.__SDKPrior = WinDLL(self.__stage_dll_path)

@@ -11,6 +11,12 @@
 
 ### Changes
 
+pkarmanski, bl4szk4 - 24.04.2024 ver 1.0.6:
+- prepared methods for writing points to the stage and checking its position and state
+- checking position is handled in a separate thread
+- added lock for [execute method](app/stage/daos/stage_connector.py)
+- prepared tests to be handled
+
 pkarmanski, bl4szk4 - 17.04.2024 ver 1.0.5:
 - added serial to freeze.cfg for instalment
 - added method for getting available com list

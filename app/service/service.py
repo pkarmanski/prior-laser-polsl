@@ -22,8 +22,9 @@ class Service:
     def get_stage_status(self) -> StageStatus:
         return StageStatus(running=self.__stage_dao.running, position=self.__stage_dao.position)
 
-    def open_session(self, com: str) -> ServiceError:
-        self.__stage_dao.set_com_port(int(com[-1]))
+    def open_session(self, com: str = "") -> ServiceError:
+        com = self.__yaml.get_stage_com_port() if not com else ""
+        self.__stage_dao.set_com_port(int(com))  # Fixme removed [-1] for testing
         open_session_response = self.__stage_dao.open_session()
         if open_session_response.error.error == ServiceError.STAGE_CONNECT_ERROR:
             self.__stage_dao.close_session(close_normally=False)

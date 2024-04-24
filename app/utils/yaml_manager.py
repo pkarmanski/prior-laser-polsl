@@ -19,4 +19,4 @@ class YamlData:
         return self.data["stage_params"]['path']
 
     def get_stage_com_port(self) -> int:
-        return self.stage_data['port']
+        return self.data["stage_params"]['COM']
