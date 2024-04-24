@@ -29,10 +29,10 @@ class StageDAO:
     def initialize(self) -> StageResponse[Any]:
         try:
             self.__stage.initialize()
-            return StageResponse[Any](error=StageError(error=ServiceError.OK, description=""))
+            return StageResponse[Any](data={}, error=StageError(error=ServiceError.OK, description=""))
         except StageConnectionError as err:
-            return StageResponse[Any](error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
-                                                       return_status=err.msg))
+            return StageResponse[Any](data={}, error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
+                                                                return_status=err.msg))
 
     def open_session(self) -> StageResponse[str]:
         try:

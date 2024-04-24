@@ -1,6 +1,6 @@
 import logging
 from ctypes import create_string_buffer, WinDLL
-
+from threading import Lock
 from app.stage.errors.errors import StageConnectionError, StageOpenSessionError, StageCloseSessionError, \
     StageExecuteError
 from app.stage.factories.commands_factory import CommandsFactory
@@ -53,14 +53,17 @@ class StageConnector:
         return self.execute(CommandsFactory.disconnect_stage(com))
 
     def execute(self, message: str) -> str:
+        self.__lock.acquire()
         self.__logger.info(f"Executed message: {message}")
         return_status = self.__SDKPrior.PriorScientificSDK_cmd(self.__session_id,
                                                                create_string_buffer(message.encode()),
                                                                self.__read_buffer)
         if return_status:
             self.__logger.critical(f"Api error {return_status}")
+            self.__lock.release()
             raise StageExecuteError(int(return_status))
         else:
             data = self.__read_buffer.value.decode()
             self.__logger.info(f"Success {data}")
+        self.__lock.release()
         return data

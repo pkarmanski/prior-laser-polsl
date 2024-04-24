@@ -60,5 +60,34 @@ class Service:
         self.__stage_dao.set_position(0, 0)
         return ServiceError.OK
 
-    def get_coms(self) -> List[str]:
+    @staticmethod
+    def get_coms() -> List[str]:
         return Utils.get_coms()
+
+    def go_to_position(self, file_path: str):
+        with open(file_path, "r") as file:
+            positions = file.read()
+            file.close()
+            positions = positions.split("\n")
+            positions = [[int(coordinate) for coordinate in position.split(',')] for position in positions[1:]]
+            for x, y in positions:
+                self.__stage_dao.set_position(x, y)
+
+    def check_position(self):
+        spectrum = (x for x in range(200))
+        for _ in spectrum:
+            is_running_response = self.__stage_dao.get_running()
+            if is_running_response.data is None:
+                break
+            elif is_running_response.data == 0:
+                time.sleep(0.5)
+                continue
+            else:
+                positions_response = self.__stage_dao.get_position()
+            if positions_response.error == ServiceError.OK:
+                print(positions_response.data)
+            time.sleep(0.5)
+
+
+
+
