@@ -75,7 +75,7 @@ class ControlCommands(Enum):
     # Description:
     # Returns the current stage XY position in microns, separated ','
     # Result: “X,Y” ie “1234,5678”
-    STAGE_POSITION_GET = "controller.stage.busy.get"
+    STAGE_POSITION_GET = "controller.stage.position.get"
 
     # Description:
     # sets position of stage when stage is not busy

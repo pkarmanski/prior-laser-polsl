@@ -39,7 +39,7 @@ class Service:
 
     def calibrate(self) -> ServiceError:
         self.__stage_dao.running = True
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(-1000, -1000)
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(-7000, -7000)
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -72,7 +72,11 @@ class Service:
             positions = positions.split("\n")
             positions = [[int(coordinate) for coordinate in position.split(',')] for position in positions[1:]]
             for x, y in positions:
-                self.__stage_dao.set_position(x, y)
+                self.__stage_dao.goto_position(x, y, speed=10000)
+                time.sleep(0.2)
+        return_stopped = self.__stage_dao.stop_stage()
+        if return_stopped.error == ServiceError.OK:
+            self.__stage_dao.__logger.info("***********************GIT")
 
     def check_position(self):
         spectrum = (x for x in range(200))
@@ -81,13 +85,13 @@ class Service:
             if is_running_response.data is None:
                 break
             elif is_running_response.data == 0:
-                time.sleep(0.5)
+                time.sleep(0.2)
                 continue
             else:
                 positions_response = self.__stage_dao.get_position()
             if positions_response.error == ServiceError.OK:
                 print(positions_response.data)
-            time.sleep(0.5)
+            time.sleep(0.2)
 
 
 

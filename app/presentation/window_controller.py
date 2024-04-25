@@ -16,10 +16,12 @@ class WindowController:
 
     def run(self):  # method for start of the application
         open_session_response = self.__service.open_session()
-        self.__service.calibrate()
 
+        self.__service.calibrate()
+        #
         check_position_thread = threading.Thread(target=self.__service.check_position, daemon=True)
 
-        self.__service.go_to_position('test_positions.csv')
         check_position_thread.start()
+        self.__service.go_to_position(r'C:\Users\blach\PycharmProjects\prior-laser-polsl\test_postiotions.csv')
+        check_position_thread.join()
         self.__service.close_session()
