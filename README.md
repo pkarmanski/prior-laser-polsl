@@ -10,6 +10,9 @@
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
 ### Changes
+pkarmanski, bl4szk4 - 25.04.2024 ver 1.0.7:
+- fixed some bugs while testing programme on the stage
+- added [stop stage method](app/stage/daos/stage_dao.py)
 
 pkarmanski, bl4szk4 - 24.04.2024 ver 1.0.6:
 - prepared methods for writing points to the stage and checking its position and state

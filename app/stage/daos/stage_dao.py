@@ -99,8 +99,10 @@ class StageDAO:
         try:
             command = CommandsFactory.get_position()
             position = self.__stage.execute(command)  # TODO check behaviour
+            self.__logger.info('**************************')
             position = [int(coordinate) for coordinate in position.split(',')]
             self.position = position
+            self.__logger.info(position)
             return StageResponse[List](data=position, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return StageResponse[List](data=[], error=StageError(error=ServiceError.STAGE_ERROR,
@@ -112,6 +114,16 @@ class StageDAO:
             command = CommandsFactory.get_busy()
             running = self.__stage.execute(command)  # TODO check behaviour
             return StageResponse[bool](data=running != "0", error=StageError(error=ServiceError.OK, description=""))
+        except StageExecuteError as err:
+            return StageResponse[bool](data=None, error=StageError(error=ServiceError.STAGE_ERROR,
+                                                                 description=str(err),
+                                                                 return_status=err.msg))
+
+    def stop_stage(self) -> StageResponse[bool]:
+        try:
+            command = CommandsFactory.stop_smoothly()
+            stopped = self.__stage.execute(command)  # TODO check behaviour
+            return StageResponse[bool](data=stopped == 0, error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return StageResponse[bool](data=None, error=StageError(error=ServiceError.STAGE_ERROR,
                                                                  description=str(err),
