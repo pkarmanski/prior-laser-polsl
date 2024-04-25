@@ -67,7 +67,6 @@ class CommandsFactory:
         return ControlCommands.STAGE_MOVE_RELATIVE.command.format(x, y)
 
     @staticmethod
-    # TODO: test
     def move_at_velocity(x: int, y: int) -> str:
         return ControlCommands.STAGE_MOVE_AT_VELOCITY.command.format(x, y)
 

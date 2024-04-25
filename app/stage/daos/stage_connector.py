@@ -49,6 +49,8 @@ class StageConnector:
             raise StageCloseSessionError(int(return_status))
         else:
             self.__logger.info(f"Session closed: {return_status}")
+        data = self.__read_buffer.value.decode()
+        return data
 
     def disconnect_stage(self, com: int) -> str:
         return self.execute(CommandsFactory.disconnect_stage(com))
