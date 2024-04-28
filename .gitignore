@@ -165,3 +165,6 @@ cython_debug/
 /.idea/vcs.xml
 /.idea/git_toolbox_prj.xml
 /test.py
+/LaserPlaceHolder.jpg
+/Front.py
+/.idea/pythonProject2.iml

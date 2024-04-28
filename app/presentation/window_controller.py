@@ -25,3 +25,4 @@ class WindowController:
         self.__service.go_to_position(r'C:\Users\blach\PycharmProjects\prior-laser-polsl\test_postiotions.csv')
         check_position_thread.join()
         self.__service.close_session()
+
