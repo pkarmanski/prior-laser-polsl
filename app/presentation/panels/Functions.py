@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap
 
 from PyQt5.QtGui import QCursor
 
-def OpenFile(self):
+def OpenFile():
     dialog = QFileDialog()
     # dialog.setNameFilter("Wszystkie pliki")
     dialog.setFileMode(QFileDialog.FileMode.AnyFile)
@@ -18,5 +18,6 @@ def OpenFile(self):
 
     else:
         print("Nie udane")
-def Test(self):
-    print(file_path)
+
+def Test(main_window):
+    print(main_window.selected_files)
