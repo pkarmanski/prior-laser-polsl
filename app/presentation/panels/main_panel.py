@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout
 
 from app.presentation.components.menu_bar import MenuBar
 from app.presentation.icons.icons import Icons
-from app.presentation.window_utils.window_utils import WindowUtils
 
 
 class MainWindow(QMainWindow):
@@ -44,11 +43,9 @@ class MainWindow(QMainWindow):
         self.menu_bar.customize_init()
         self.menu_bar.add_actions()
 
-    def add_textbox(self):
-        self.add_textbox()
 
 
 
-#w = MainWindow()
-#w.show()
+# w = MainWindow()
+# w.show()
 
