@@ -2,5 +2,6 @@
 /.idea/git_toolbox_prj.xml
 /.idea/prior-laser-polsl.iml
 /test.py
+/logs/PRIOR_POLSL.log.2024-04-25
 /polsl-prior/
 /logs/
