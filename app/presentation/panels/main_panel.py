@@ -1,20 +1,13 @@
-import sys
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
     QGridLayout, QToolBar, QAction, QStatusBar, QMenuBar
-from PyQt5 import QtGui, QtCore
-from PyQt5 import Qt
-from PyQt5.QtGui import QIcon
-from PyQt5.QtGui import QPixmap
-
-from PyQt5.QtGui import QCursor
-
 from app.presentation.components.menu_bar import MenuBar
 from app.presentation.icons.icons import Icons
-from app.presentation.window_utils.window_utils import WindowUtils
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
+
         # glowne okno
         super(MainWindow, self).__init__()
         self.menu_bar = MenuBar(self.menuBar(), self)
@@ -46,14 +39,7 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1200, 700)
         self.setWindowTitle("Beta-Aplikacja-Lasera")
         self.setStyleSheet("background: #313338;")
-        self.setWindowIcon(Icons.WINDOW_ICON.value)
+        self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
 
         self.menu_bar.customize_init()
         self.menu_bar.add_actions()
-
-
-
-
-# w = MainWindow()
-# w.show()
-
