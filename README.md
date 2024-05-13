@@ -11,6 +11,9 @@
 
 ### Changes
 
+bl4szk4 - 10.05.2024 ver 1.0.9
+- Added first version of canvas that allows to draw on the screen
+
 bl4szk4 - 10.05.2024 ver 1.0.8:
 - Fixed the problem with the app's icon. Icons are stored in [enum](app/presentation/icons/icons.py)
 

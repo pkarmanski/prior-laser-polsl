@@ -22,7 +22,8 @@ class WindowController:
         app = QApplication(sys.argv)
         self.__main_panel = MainWindow()
         self.__main_panel.show()
-        sys.exit(app.exec())
+        app.exec_()
+        # sys.exit(app.exec())
 
         # open_session_response = self.__service.open_session()
         #
