@@ -1,14 +1,14 @@
-import PyQt5.QtWidgets as Qtw
+import PyQt5.QtWidgets as qtw
 
-class Additional_Windows_Text(Qtw.QWidget):
+class Additional_Windows_Text(qtw.QWidget):
     def __init__(self):
         super().__init__()
-        layout = Qtw.QVBoxLayout()
-        self.label = Qtw.QLabel("")
+        layout = qtw.QVBoxLayout()
+        self.label = qtw.QLabel("")
         layout.addWidget(self.label)
         self.setLayout(layout)
-        my_text = Qtw.QTextEdit(self,
-                                lineWrapMode=Qtw.QTextEdit.FixedColumnWidth,
+        my_text = qtw.QTextEdit(self,
+                                lineWrapMode=qtw.QTextEdit.FixedColumnWidth,
                                 lineWrapColumnOrWidth=50,
                                 placeholderText="Hellow World!"
                                 )
