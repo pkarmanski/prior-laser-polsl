@@ -51,9 +51,11 @@ class MainWindow(QMainWindow):
         self.menu_bar.customize_init()
         self.menu_bar.add_actions()
 
+    def add_textbox(self):
+        self.add_textbox()
 
 
 
-# w = MainWindow()
-# w.show()
+#w = MainWindow()
+#w.show()
 
