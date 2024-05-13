@@ -10,6 +10,10 @@
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
 ### Changes
+
+bl4szk4, pkarmanski - 09.05.2024 ver 1.0.8:
+- refactored presentation folder and its classes so it fits whole project coding style
+
 pkarmanski, bl4szk4 - 25.04.2024 ver 1.0.7:
 - fixed some bugs while testing programme on the stage
 - added [stop stage method](app/stage/daos/stage_dao.py)
