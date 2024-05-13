@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPixmap
 
 from PyQt5.QtGui import QCursor
 
+
 def OpenFile():
     dialog = QFileDialog()
     # dialog.setNameFilter("Wszystkie pliki")

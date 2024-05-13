@@ -1,6 +1,10 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
     QGridLayout, QToolBar, QAction, QStatusBar, QMenuBar
+from PyQt5.uic.properties import QtCore
+
+from app.presentation.components.canvas import Canvas
 from app.presentation.components.menu_bar import MenuBar
 from app.presentation.icons.icons import Icons
 
@@ -8,17 +12,22 @@ from app.presentation.icons.icons import Icons
 class MainWindow(QMainWindow):
     def __init__(self):
 
-        # glowne okno
+        # main window
         super(MainWindow, self).__init__()
         self.menu_bar = MenuBar(self.menuBar(), self)
         self.selected_files = []
         self.customize_init()
 
-        # grid i layout
-        self.grid = QGridLayout()
-        self.centerWidget = QWidget()
-        self.centerWidget.setLayout(self.grid)
-        self.setCentralWidget(self.centerWidget)
+        # grid and layout
+        self.canvas = Canvas()
+        self.canvas.setAttribute(Qt.WA_StyledBackground, True)
+
+        widget = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(self.canvas)
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+        self.drawing = False
 
         # #toolbar
         # toolbar = QToolBar()
@@ -40,6 +49,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Beta-Aplikacja-Lasera")
         self.setStyleSheet("background: #313338;")
         self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
-
+        self.setGeometry(100, 100, 100, 500)
         self.menu_bar.customize_init()
         self.menu_bar.add_actions()
+
