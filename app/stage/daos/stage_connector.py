@@ -1,5 +1,6 @@
 import logging
-from ctypes import create_string_buffer, WinDLL
+from ctypes import create_string_buffer
+import ctypes
 from threading import Lock
 from app.stage.errors.errors import StageConnectionError, StageOpenSessionError, StageCloseSessionError, \
     StageExecuteError
@@ -25,7 +26,7 @@ class StageConnector:
         self.__lock = Lock()
 
     def initialize(self):
-        self.__SDKPrior = WinDLL(self.__stage_dll_path)
+        self.__SDKPrior = ctypes.WinDLL(self.__stage_dll_path)
         return_status = self.__SDKPrior.PriorScientificSDK_Initialise()
         if return_status:
             self.__logger.critical(f"Prior initialization error: {return_status}")
