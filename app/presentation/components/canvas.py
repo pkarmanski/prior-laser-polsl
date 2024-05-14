@@ -8,7 +8,7 @@ class Canvas(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setFixedSize(1100, 700)
-        self.setStyleSheet("background-color: white; border: 2px solid black;")
+        self.setObjectName('widget-canvas')
 
         self.last_pos = None
         self.current_pos = None
