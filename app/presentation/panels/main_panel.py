@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
-    QGridLayout, QToolBar, QAction, QStatusBar, QMenuBar
+    QGridLayout, QToolBar, QAction, QStatusBar, QMenuBar, QHBoxLayout
 from PyQt5.uic.properties import QtCore
 
 from app.presentation.components.canvas import Canvas
@@ -43,13 +43,18 @@ class MainWindow(QMainWindow):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)
 
         widget = QWidget()
-        layout = QGridLayout()
-        layout.addWidget(self.canvas, 0, 1)
-        layout.addWidget(self.stage_info_grid, 0, 0)
-        layout.addWidget(self.stage_management_grid, 1, 0)
+        outer_layout = QHBoxLayout()
+        stage_layout = QVBoxLayout()
 
-        layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
-        widget.setLayout(layout)
+        stage_layout.addWidget(self.stage_info_grid)
+        stage_layout.addWidget(self.stage_management_grid)
+        stage_layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+
+        outer_layout.addLayout(stage_layout)
+        outer_layout.addWidget(self.canvas)
+        outer_layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+
+        widget.setLayout(outer_layout)
         self.setCentralWidget(widget)
 
         self.setMinimumSize(1200, 700)
