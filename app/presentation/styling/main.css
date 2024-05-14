@@ -1,0 +1,59 @@
+QLabel#stage-info-element{
+    padding-top: 20px;
+    font-size: 20px;
+    color: white;
+    padding-bottom: 20px;
+    border-spacing: 10px;
+}
+QFrame#basic-frame{
+    background-color: #222a2d;
+
+}
+QMainWindow{
+    background: #313338;
+    align-items: end;
+}
+QMenuBar{
+    border: 1px solid #64646c;
+    border-radius: 2px;
+    background: #24242C;
+    font-size: 12px;
+    color: white;
+}
+QMenuBar::item {
+    background: #24242C;
+    font-size: 12px;
+    color: white;
+}
+
+QMenuBar::item:selected {
+    background-color: #323844;
+}
+QMenu{
+     background: #24242C;
+    font-size: 12px;
+    color: white;
+}
+QMenu::item::selected{
+    background-color: #323844;
+}
+QPushButton#button-stage-management{
+    background-color: #18361a;
+    border: none;
+    color: #ffffff;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+}
+QPushButton#button-stage-management:hover{
+    background-color: #265229;
+ }
+QPushButton#button-stage-management:pressed{
+    background-color: #122613;
+}

@@ -6,6 +6,8 @@ from PyQt5.uic.properties import QtCore
 
 from app.presentation.components.canvas import Canvas
 from app.presentation.components.menu_bar import MenuBar
+from app.presentation.components.stage_info_grid import StageInfoGrid
+from app.presentation.components.stage_management_grid import StageManagementGrid
 from app.presentation.icons.icons import Icons
 
 
@@ -16,18 +18,11 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.menu_bar = MenuBar(self.menuBar(), self)
         self.selected_files = []
-        self.customize_init()
-
-        # grid and layout
         self.canvas = Canvas()
-        self.canvas.setAttribute(Qt.WA_StyledBackground, True)
+        self.stage_info_grid = StageInfoGrid()
+        self.stage_management_grid = StageManagementGrid()
 
-        widget = QWidget()
-        layout = QVBoxLayout()
-        layout.addWidget(self.canvas)
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
-        self.drawing = False
+        self.customize_init()
 
         # #toolbar
         # toolbar = QToolBar()
@@ -45,11 +40,20 @@ class MainWindow(QMainWindow):
         # toolbar.addAction(act2)
 
     def customize_init(self):
+        self.canvas.setAttribute(Qt.WA_StyledBackground, True)
+
+        widget = QWidget()
+        layout = QGridLayout()
+        layout.addWidget(self.canvas, 0, 1)
+        layout.addWidget(self.stage_info_grid, 0, 0)
+        layout.addWidget(self.stage_management_grid, 1, 0)
+
+        layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+
         self.setMinimumSize(1200, 700)
         self.setWindowTitle("Beta-Aplikacja-Lasera")
-        self.setStyleSheet("background: #313338;")
         self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
         self.setGeometry(100, 100, 100, 500)
-        self.menu_bar.customize_init()
         self.menu_bar.add_actions()
-

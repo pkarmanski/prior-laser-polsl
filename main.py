@@ -2,7 +2,7 @@ import logging
 from logging.config import fileConfig
 from app.presentation.window_controller import WindowController
 
-version = "1.0.8"
+version = "1.0.10"
 
 fileConfig('logging.conf')
 

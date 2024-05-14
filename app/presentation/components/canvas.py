@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPen, QPainter
 class Canvas(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setFixedSize(400, 600)
+        self.setFixedSize(1100, 700)
         self.setStyleSheet("background-color: white; border: 2px solid black;")
 
         self.last_pos = None
