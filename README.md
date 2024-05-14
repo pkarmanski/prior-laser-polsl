@@ -17,6 +17,7 @@ bl4szk4 - 14.05.2024 ver 1.0.10
 - added new component for displaying info about a stage [stage_info](app/presentation/components/stage_info_grid.py)
 - added component with 2 buttons for basic actions [management](app/presentation/components/stage_management_grid.py)
 - fixed styling in main window
+- added [com port selection](app/presentation/components/com_port_grid.py) for selection of com ports for stage and laser
 
 bl4szk4 - 10.05.2024 ver 1.0.9
 - Added first version of canvas that allows to draw on the screen
