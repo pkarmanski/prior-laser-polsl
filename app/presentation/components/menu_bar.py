@@ -10,7 +10,7 @@ class MenuBar:
         self.other_menu = self.menu_bar.addMenu("$Text")
 
         # actions
-        self.action_text_editor = QAction(" Edytor Tekstu ", main_window)
+        self.action_text_window = QAction(" Okno Tekstowe ", main_window)
         self.action_file_selection = QAction("  Plik  ", main_window)
         self.action_notes = QAction(" Notatki ", main_window)
 
@@ -23,7 +23,7 @@ class MenuBar:
             "border-radius: 2px;" +
             "background: #24242C;" +
             "font-size: 12px;" +
-            "color: 'WHITE';}"
+            "color: 'WHITE';}" +
             ":hover{background: #323844;}")
 
         self.file_menu.setStyleSheet(
@@ -31,15 +31,15 @@ class MenuBar:
             "border-radius: 2px;" +
             "background: #24242C;" +
             "font-size: 12px;" +
-            "color: 'WHITE';}"
+            "color: 'WHITE';}" +
             ":hover{background: #323844;}")
 
     def add_actions(self):
 
         self.action_file_selection.triggered.connect(lambda x: WindowUtils.open_file(self))
         self.action_notes.triggered.connect(lambda x: WindowUtils.test(self))
-        self.action_text_editor.triggered.connect(lambda x: WindowUtils.text_editor(self))
+        self.action_text_window.triggered.connect(lambda x: WindowUtils.text_window(self))
         self.file_menu.addAction(self.action_file_selection)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.action_notes)
-        self.other_menu.addAction(self.action_text_editor)
+        self.other_menu.addAction(self.action_text_window)
