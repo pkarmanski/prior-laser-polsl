@@ -14,6 +14,7 @@ from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
 
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
 
