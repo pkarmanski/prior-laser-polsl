@@ -15,6 +15,6 @@ class WindowUtils:
         print(main_window.selected_files)
 
     @staticmethod # FIXME nie wiem czy to powinno byc statyczna metoda
-    def text_editor(main_window):   # FIXME zastanawiam sie czy napisac to jako funkcjie czy oddzielna klase, do okna
+    def text_window(main_window):   # FIXME zastanawiam sie czy napisac to jako funkcjie czy oddzielna klase, do okna
         main_window.text = Additional_Windows_Text
         main_window.text.show()
