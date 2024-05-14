@@ -58,3 +58,7 @@ QPushButton#button-stage-management:hover{
 QPushButton#button-stage-management:pressed{
     background-color: #122613;
 }
+QWidget#widget-canvas{
+    background-color: white;
+    border-radius: 2px;
+}
