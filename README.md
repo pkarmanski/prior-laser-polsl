@@ -18,6 +18,8 @@ bl4szk4 - 14.05.2024 ver 1.0.10
 - added component with 2 buttons for basic actions [management](app/presentation/components/stage_management_grid.py)
 - fixed styling in main window
 - added [com port selection](app/presentation/components/com_port_grid.py) for selection of com ports for stage and laser
+- added [laser by arduino](app/laser/laser_connector.py) to connect project with an arduino
+- added actions to buttons to start connection with arduino and write PWM value to arduino / for testing
 
 bl4szk4 - 10.05.2024 ver 1.0.9
 - Added first version of canvas that allows to draw on the screen

@@ -4,7 +4,7 @@ all visible components for render.
 This class should not be communicating directly with stage.
 """
 import sys
-
+from time import sleep
 from PyQt5.QtWidgets import QApplication
 
 from app.presentation.panels.main_panel import MainWindow
@@ -19,8 +19,14 @@ class WindowController:
         self.app = QApplication(sys.argv)
         self.style_panel()
 
+    def set_laser_com_port(self):
+        self.__service.set_laser_com_port(self.__main_panel.get_com_arduino())
+
+    def write_laser(self, value: int):
+        self.__service.laser_write(str(value))
+
     def run(self):  # method for start of the application
-        self.__main_panel = MainWindow()
+        self.__main_panel = MainWindow(self.set_laser_com_port, self.write_laser)
         self.__main_panel.show()
         self.app.exec_()
 
@@ -28,6 +34,13 @@ class WindowController:
         with open('app/presentation/styling/main.css', 'r') as f:
             style = f.read()
             self.app.setStyleSheet(style)
+
+
+
+
+
+
+
         # sys.exit(app.exec())
 
         # open_session_response = self.__service.open_session()

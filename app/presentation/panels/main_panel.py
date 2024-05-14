@@ -12,9 +12,8 @@ from app.presentation.components.stage_management_grid import StageManagementGri
 from app.presentation.icons.icons import Icons
 
 
-
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, fun1, fun2):
 
         # main window
         super(MainWindow, self).__init__()
@@ -22,7 +21,7 @@ class MainWindow(QMainWindow):
         self.selected_files = []
         self.canvas = Canvas()
         self.stage_info_grid = StageInfoGrid()
-        self.stage_management_grid = StageManagementGrid()
+        self.stage_management_grid = StageManagementGrid(fun1, fun2)
         self.port_coms_grid = ComPortsGrid()
 
         self.customize_init()
@@ -66,3 +65,6 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
         self.setGeometry(100, 100, 100, 500)
         self.menu_bar.add_actions()
+
+    def get_com_arduino(self) -> str:
+        return self.port_coms_grid.get_laser_com
