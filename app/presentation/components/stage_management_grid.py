@@ -6,9 +6,9 @@ from app.presentation.components.basic_grid import BasicGrid
 class StageManagementGrid(BasicGrid):
     def __init__(self):
         super().__init__()
-        self.init_management_grid()
+        self.init_grid()
 
-    def init_management_grid(self):
+    def init_grid(self):
         # self.frame.setObjectName('frame-stage-management')
 
         button_calibration = QPushButton('Calibrate')
