@@ -9,9 +9,9 @@ class StageInfoGrid(BasicGrid):
         super().__init__()
         self.is_stage_moving = False
         self.stage_position = [0, 0]
-        self.init_stage_grid()
+        self.init_grid()
 
-    def init_stage_grid(self):
+    def init_grid(self):
         # self.frame.setObjectName("frame-stage-info")
 
         position_x = QLabel(f'Position X: {self.stage_position[0]}')

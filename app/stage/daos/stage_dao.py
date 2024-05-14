@@ -10,7 +10,7 @@ from app.stage.daos.stage_connector import StageConnector
 from app.stage.errors.errors import StageConnectionError, StageExecuteError, StageOpenSessionError
 from app.stage.factories.commands_factory import CommandsFactory
 from app.stage.models.stage_models import StageResponse, StageError
-from app.utils.yaml_manager import YamlData
+from app.stage_utils.yaml_manager import YamlData
 
 
 class StageDAO:

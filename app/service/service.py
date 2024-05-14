@@ -7,8 +7,8 @@ import time
 from app.enums.service_errors import ServiceError
 from app.models.service_models import StageStatus
 from app.stage.daos.stage_dao import StageDAO
-from app.utils.utils import Utils
-from app.utils.yaml_manager import YamlData
+from app.stage_utils.utils import StageUtils
+from app.stage_utils.yaml_manager import YamlData
 from typing import List
 
 
@@ -16,7 +16,7 @@ class Service:
     def __init__(self):
         self.__yaml = YamlData()
         self.__stage_dao = StageDAO(self.__yaml)
-        self.__stage_dao.initialize()
+        # self.__stage_dao.initialize() # FIXME: uncomment after tests with arduino
         self.__running_thread = None
 
     def get_stage_status(self) -> StageStatus:
@@ -63,7 +63,7 @@ class Service:
 
     @staticmethod
     def get_coms() -> List[str]:
-        return Utils.get_coms()
+        return StageUtils.get_coms()
 
     def go_to_position(self, file_path: str):
         with open(file_path, "r") as file:
