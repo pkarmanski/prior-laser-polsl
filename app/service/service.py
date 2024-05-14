@@ -5,6 +5,7 @@ and what to return to window when error happens
 import time
 
 from app.enums.service_errors import ServiceError
+from app.laser.laser_connector import LaserConnector
 from app.models.service_models import StageStatus
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
@@ -18,6 +19,14 @@ class Service:
         self.__stage_dao = StageDAO(self.__yaml)
         # self.__stage_dao.initialize() # FIXME: uncomment after tests with arduino
         self.__running_thread = None
+        self.__laser_connector = None
+
+    def set_laser_com_port(self, com_port: str):
+        self.__laser_connector = LaserConnector(com_port)
+
+    def laser_write(self, value):
+        print(self.__laser_connector)
+        self.__laser_connector.write_data(value)
 
     def get_stage_status(self) -> StageStatus:
         return StageStatus(running=self.__stage_dao.running, position=self.__stage_dao.position)
