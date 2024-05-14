@@ -16,13 +16,18 @@ class WindowController:
     def __init__(self):
         self.__service = Service()
         self.__main_panel = None
+        self.app = QApplication(sys.argv)
+        self.style_panel()
 
     def run(self):  # method for start of the application
-        pass
-        app = QApplication(sys.argv)
         self.__main_panel = MainWindow()
         self.__main_panel.show()
-        app.exec_()
+        self.app.exec_()
+
+    def style_panel(self):
+        with open('app/presentation/styling/main.css', 'r') as f:
+            style = f.read()
+            self.app.setStyleSheet(style)
         # sys.exit(app.exec())
 
         # open_session_response = self.__service.open_session()
