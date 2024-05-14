@@ -12,9 +12,11 @@ class StageManagementGrid(BasicGrid):
         # self.frame.setObjectName('frame-stage-management')
 
         button_calibration = QPushButton('Calibrate')
+        button_calibration.addAction(self, )
         button_calibration.setObjectName("button-stage-management")
         button_start = QPushButton('Start')
         button_start.setObjectName("button-stage-management")
 
         self.frame_layout.addWidget(button_calibration)
         self.frame_layout.addWidget(button_start)
+

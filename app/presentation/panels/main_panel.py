@@ -5,10 +5,12 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QVBo
 from PyQt5.uic.properties import QtCore
 
 from app.presentation.components.canvas import Canvas
+from app.presentation.components.com_port_grid import ComPortsGrid
 from app.presentation.components.menu_bar import MenuBar
 from app.presentation.components.stage_info_grid import StageInfoGrid
 from app.presentation.components.stage_management_grid import StageManagementGrid
 from app.presentation.icons.icons import Icons
+
 
 
 class MainWindow(QMainWindow):
@@ -21,6 +23,7 @@ class MainWindow(QMainWindow):
         self.canvas = Canvas()
         self.stage_info_grid = StageInfoGrid()
         self.stage_management_grid = StageManagementGrid()
+        self.port_coms_grid = ComPortsGrid()
 
         self.customize_init()
 
@@ -48,6 +51,7 @@ class MainWindow(QMainWindow):
 
         stage_layout.addWidget(self.stage_info_grid)
         stage_layout.addWidget(self.stage_management_grid)
+        stage_layout.addWidget(self.port_coms_grid)
         stage_layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
 
         outer_layout.addLayout(stage_layout)
