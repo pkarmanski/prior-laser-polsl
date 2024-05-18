@@ -60,7 +60,7 @@ class Service:
     # TODO check if function is working while stage is connected
     def calibrate(self, canvas_width: int, canvas_height: int) -> ServiceError:
         self.__stage_dao.running = True
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(-7000, -7000)
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(-7000, -7000) # TODO: parameter
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -77,6 +77,27 @@ class Service:
                 limits = limit_check_response.data
             time.sleep(1)
 
+        self.__stage_dao.move_at_velocity(0, 0)
+        self.__stage_dao.set_position(0, 0)
+
+        # checking width and height
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(7000, 7000)   # TODO: parameter
+        if move_at_velocity_response.error.error != ServiceError.OK:
+            return ServiceError.STAGE_CALIBRATION_ERROR
+        limits = 0
+        error_count = 0
+        while limits != 5:
+            limit_check_response = self.__stage_dao.check_stage_limits()
+            if limit_check_response.error.error != ServiceError.OK:
+                error_count += 1
+                if error_count > 3:
+                    self.__stage_dao.running = False
+                    self.__stage_dao.move_at_velocity(0, 0)
+                    return ServiceError.STAGE_CALIBRATION_ERROR
+            else:
+                limits = limit_check_response.data
+            time.sleep(1)
+        self.__stage_dao.move_at_velocity(0, 0)
         self.__stage_dao.running = False
         position = self.__stage_dao.get_position().data
 

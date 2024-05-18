@@ -28,7 +28,11 @@ class WindowController:
 
 
     def run(self):  # method for start of the application
-        self.__main_panel = MainWindow(self.set_laser_com_port, self.write_laser)
+        self.__main_panel = MainWindow()
+        self.__main_panel.setup_button_actions(self.__service.calibrate,
+                                               self.__service.laser_write,
+                                               self.__service.init_stage,
+                                               self.__service.init_laser)
         self.__main_panel.show()
         self.app.exec_()
 

@@ -9,7 +9,7 @@ from PyQt5.QtGui import QPen, QPainter
 class Canvas(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setFixedSize(1100, 700)
+        self.setFixedSize(800, 600)
         self.setObjectName('widget-canvas')
 
         self.last_pos = None
@@ -46,3 +46,8 @@ class Canvas(QtWidgets.QWidget):
         self.__lines.append(self.__current_line)
         self.__current_line = []
         self.update()
+
+    @property
+    def get_points(self) -> List[List[Tuple[int, int]]]:
+        return self.__lines
+    

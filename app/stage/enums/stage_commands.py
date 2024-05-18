@@ -109,7 +109,7 @@ class ControlCommands(Enum):
 
     # Description:
     # Returns the limit switch state for the XY axes of the controller, ret: int as a 4 bit val:
-    # BIT:      |3  |2  |1  |0  |
+    # BIT:      |3  |2  |1  |0  |   0101
     # SWITCH:   |Y- |Y+ |X- |X+ |
     STAGE_GET_LIMITS = "controller.stage.limits.get"
 

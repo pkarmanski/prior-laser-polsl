@@ -58,6 +58,27 @@ QPushButton#button-stage-management:hover{
 QPushButton#button-stage-management:pressed{
     background-color: #122613;
 }
+
+QPushButton#button-connect{
+    background-color: #0c0e34;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+}
+QPushButton#button-connect:hover{
+    background-color: #1c1e7c;
+ }
+QPushButton#button-connect:pressed{
+    background-color: #07084b;
+}
+
 QWidget#widget-canvas{
     background-color: white;
     border-radius: 2px;

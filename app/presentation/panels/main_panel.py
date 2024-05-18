@@ -26,25 +26,11 @@ class MainWindow(QMainWindow):
         self.selected_files = []
         self.canvas = Canvas()
         self.stage_info_grid = StageInfoGrid()
-        self.stage_management_grid = StageManagementGrid(fun1, fun2)
+        self.stage_management_grid = StageManagementGrid()
         self.port_coms_grid = ComPortsGrid()
 
         self.customize_init()
-
-        # #toolbar
-        # toolbar = QToolBar()
-        # toolbar.setMovable(False)
-        # toolbar.setStyleSheet(
-        #     "{border: 1px solid '#64646c';" +
-        #     "border-radius: 2px;"
-        #     "background: #24242C;" +
-        #     "font-size: 11px;" +
-        #     "color: 'white';}"
-        #     ":hover{background: #323844;}"
-        # )
-        # self.addToolBar(toolbar)
-        # toolbar.addAction(act1)
-        # toolbar.addAction(act2)
+        self.buttons_list = []
 
     def customize_init(self):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)
@@ -70,6 +56,12 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
         self.setGeometry(100, 100, 100, 500)
         self.menu_bar.add_actions()
+
+        self.buttons_list = [self.stage_management_grid.button_start,
+                             self.stage_management_grid.button_calibration,
+                             self.port_coms_grid.button_connect_laser,
+                             self.port_coms_grid.button_connect_stage
+                             ]
 
     def get_com_arduino(self) -> str:
         return self.port_coms_grid.get_laser_com
