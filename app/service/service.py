@@ -2,15 +2,16 @@
 This class will talk with repositories and will have logic for error handling
 and what to return to window when error happens
 """
+import logging
 import time
 
 from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
-from app.models.service_models import StageStatus
+from app.models.service_models import StageStatus, ServiceAppParams
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
 from app.stage_utils.yaml_manager import YamlData
-from typing import List
+from typing import List, Tuple
 
 
 class Service:
@@ -20,12 +21,18 @@ class Service:
         # self.__stage_dao.initialize() # FIXME: uncomment after tests with arduino
         self.__running_thread = None
         self.__laser_connector = None
+        self.__service_app_params = None
+        self.__logger = logging.getLogger(__name__)
 
-    def set_laser_com_port(self, com_port: str):
+    def init_stage(self, com_port: str):
+        com_port = int(com_port[3:])
+        self.__stage_dao.initialize(com_port)
+
+    def init_laser(self, com_port: str):
         self.__laser_connector = LaserConnector(com_port)
 
     def laser_write(self, value):
-        print(self.__laser_connector)
+        self.__logger.info(self.__laser_connector)
         self.__laser_connector.write_data(value)
 
     def get_stage_status(self) -> StageStatus:
@@ -46,7 +53,12 @@ class Service:
         #     pass
         #     # TODO info do frontu?
 
-    def calibrate(self) -> ServiceError:
+    def set_service_params(self, stage_width: int, stage_height: int, canvas_width: int, canvas_height: int):
+        self.__service_app_params = ServiceAppParams(scale_x=stage_width / canvas_width, scale_y=stage_height / canvas_height)
+
+
+    # TODO check if function is working while stage is connected
+    def calibrate(self, canvas_width: int, canvas_height: int) -> ServiceError:
         self.__stage_dao.running = True
         move_at_velocity_response = self.__stage_dao.move_at_velocity(-7000, -7000)
         if move_at_velocity_response.error.error != ServiceError.OK:
@@ -66,8 +78,10 @@ class Service:
             time.sleep(1)
 
         self.__stage_dao.running = False
-        self.__stage_dao.move_at_velocity(0, 0)
-        self.__stage_dao.set_position(0, 0)
+        position = self.__stage_dao.get_position().data
+
+        if position:
+            self.set_service_params(position[0], position[1], canvas_width, canvas_height)
         return ServiceError.OK
 
     @staticmethod
@@ -85,7 +99,7 @@ class Service:
                 time.sleep(0.2)
         return_stopped = self.__stage_dao.stop_stage()
         if return_stopped.error == ServiceError.OK:
-            self.__stage_dao.__logger.info("***********************GIT")
+            self.__logger.info("***********************GIT")
 
     def check_position(self):
         spectrum = (x for x in range(200))
@@ -99,9 +113,14 @@ class Service:
             else:
                 positions_response = self.__stage_dao.get_position()
             if positions_response.error == ServiceError.OK:
-                print(positions_response.data)
+                self.__logger.info(positions_response.data)
             time.sleep(0.2)
 
+    def print_lines(self, lines: List[List[Tuple[int, int]]]):
+        for line in lines:
+            scaled_lines = StageUtils.scale_list_points(line,
+                                                        self.__service_app_params.scale_x,
+                                                        self.__service_app_params.scale_y)
 
 
 

@@ -11,6 +11,13 @@
 
 ### Changes
 
+bl4szk4, pkarmanski - 18.05.2024 ver 1.0.11:
+- prepared notification class but it is not working yet
+- extended calibration function for getting measurements of stage size
+- prepared scaling function but it is not tested yet
+- connected function for calibration and laser writing with buttons
+- added buttons for creating stage and laser instances and connecting them with proper service functions
+
 bl4szk4 - 14.05.2024 ver 1.0.10
 - Added [css file](app/presentation/styling/main.css) for storing all custom styles
 - added a base class for custom grid [basic_grid](app/presentation/components/basic_grid.py)

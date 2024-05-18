@@ -16,7 +16,8 @@ from app.stage_utils.yaml_manager import YamlData
 class StageDAO:
     def __init__(self, yaml_data: YamlData):
         self.__yaml_data = yaml_data
-        self.__com_port = self.__yaml_data.get_stage_com_port()
+        self.__com_port = None
+        # self.__com_port = self.__yaml_data.get_stage_com_port()
         self.__logger = logging.getLogger(__name__)
         self.__stage = StageConnector(self.__yaml_data.get_stage_ddl_path(), 1000)
         self.__actual_speed = 1000
@@ -26,8 +27,9 @@ class StageDAO:
     def set_com_port(self, com_port: int):
         self.__com_port = com_port
 
-    def initialize(self) -> StageResponse[Any]:
+    def initialize(self, com_port: int) -> StageResponse[Any]:
         try:
+            self.__com_port = com_port
             self.__stage.initialize()
             return StageResponse[Any](data={}, error=StageError(error=ServiceError.OK, description=""))
         except StageConnectionError as err:

@@ -90,3 +90,18 @@ QComboBox::drop-down {
 QComboBox:hover {
     border-color: #090e11;
 }
+
+QWidget#notification-error{
+    background-color: #2e7d32;
+    color: #ffffff;
+    border: 2px solid #1b5e20;
+    border-radius: 10px;
+}
+
+
+QWidget#notification-success{
+    background-color: #b71c1c;
+    color: #ffffff;
+    border: 2px solid #7f0000;
+    border-radius: 10px;
+}

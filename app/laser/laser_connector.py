@@ -14,7 +14,7 @@ class LaserConnector:
         self.__com_port = com_port
         print(self.__com_port)
 
-    def write_data(self, value):
+    def write_data(self, value: str):
         self.__laser.write(bytes(value, 'utf-8'))
         time.sleep(0.1)
         print(self.__laser.readline())
