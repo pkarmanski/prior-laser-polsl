@@ -8,6 +8,8 @@ class ServiceError(Enum):
     PRIOR_CONNECT_ERROR = (3, "PRIOR_CONNECT_ERROR")
     PRIOR_DISCONNECT_ERROR = (4, "PRIOR_DISCONNECT_ERROR")
     STAGE_CALIBRATION_ERROR = (4, "STAGE_CALIBRATION_ERROR")
+    STAGE_BUFFER_ERROR = (5, "STAGE_BUFFER_ERROR")
+
 
     def __init__(self, code: int, description: str):
         self.__code = code

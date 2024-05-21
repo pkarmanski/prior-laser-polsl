@@ -64,8 +64,8 @@ class StageDAO:
                 self.__stage.execute(set_speed_command)
                 self.__actual_speed = speed
             command = CommandsFactory.goto_position(x, y)
-            _ = self.__stage.execute(command)
-            return StageResponse[str](data="0", error=StageError(error=ServiceError.OK, description=""))
+            response = self.__stage.execute(command)
+
         except StageExecuteError as err:
             return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
                                                                 return_status=err.msg))

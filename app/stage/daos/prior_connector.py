@@ -26,7 +26,8 @@ class PriorConnector:
         self.__com_port = None
         self.__lock = Lock()
 
-    def initialize(self):
+    def initialize(self, com_port: int):
+        self.__com_port = com_port
         self.__SDKPrior = ctypes.WinDLL(self.__stage_dll_path)
         return_status = self.__SDKPrior.PriorScientificSDK_Initialise()
         if return_status:
@@ -42,7 +43,7 @@ class PriorConnector:
             raise StageOpenSessionError(str(self.__session_id))
         else:
             self.__logger.info(f"Session opened: {self.__session_id}")
-            return self.execute(CommandsFactory.connect_stage(com))
+            return self.execute(CommandsFactory.connect_stage(self.__com_port))
 
     def close_session(self):
         return_status = self.__SDKPrior.PriorScientificSDK_CloseSession(self.__session_id)
