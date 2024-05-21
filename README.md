@@ -9,10 +9,22 @@
 6. We are using python3.12.2
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
+
+### Dictionary
+TODO
+Stage - 
+Laser - 
+Printing -
+
+
 ### Changes
 
-bl4szk4 - 21.05.2024 ver 1.0.12:
+bl4szk4, pkarmanski - 21.05.2024 ver 1.0.12:
 - added commands for TTL
+- stage_connector renamed to prior_connector
+- prior_connector moved from stage dao to service and now its is passed to stage dao and laser dao
+- moved from stage dao prior connections functions
+- created method for handling canvas input and "printing" them with stage and laser
 
 bl4szk4, pkarmanski - 18.05.2024 ver 1.0.11:
 - prepared notification class but it is not working yet

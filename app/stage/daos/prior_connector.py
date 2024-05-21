@@ -7,7 +7,7 @@ from app.stage.errors.errors import StageConnectionError, StageOpenSessionError,
 from app.stage.factories.commands_factory import CommandsFactory
 
 
-class StageConnector:
+class PriorConnector:
     """
     Attributes:
         :arg __read_buffer: buffer for communication with stage
@@ -23,6 +23,7 @@ class StageConnector:
         self.__read_buffer = create_string_buffer(reading_buffer_size)
         self.__SDKPrior = None
         self.__session_id = None
+        self.__com_port = None
         self.__lock = Lock()
 
     def initialize(self):
@@ -34,7 +35,7 @@ class StageConnector:
         else:
             self.__logger.info(f"Prior initialized: {return_status}")
 
-    def open_session(self, com: int):
+    def open_session(self):
         self.__session_id = self.__SDKPrior.PriorScientificSDK_OpenNewSession()
         if self.__session_id < 0:
             self.__logger.critical(f"Open session error: {self.__session_id}")
@@ -53,8 +54,8 @@ class StageConnector:
         data = self.__read_buffer.value.decode()
         return data
 
-    def disconnect_stage(self, com: int) -> str:
-        return self.execute(CommandsFactory.disconnect_stage(com))
+    def disconnect_stage(self) -> str:
+        return self.execute(CommandsFactory.disconnect_stage(self.__com_port))
 
     def execute(self, message: str) -> str:
         self.__lock.acquire()

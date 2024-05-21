@@ -7,7 +7,9 @@ import time
 
 from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
+from app.laser.laser_dao import LaserDAO
 from app.models.service_models import StageStatus, ServiceAppParams
+from app.stage.daos.prior_connector import PriorConnector
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
 from app.stage_utils.yaml_manager import YamlData
@@ -17,17 +19,44 @@ from typing import List, Tuple
 class Service:
     def __init__(self):
         self.__yaml = YamlData()
-        self.__stage_dao = StageDAO(self.__yaml)
-        # self.__stage_dao.initialize() # FIXME: uncomment after tests with arduino
+        self.__prior_connector = PriorConnector(self.__yaml.get_stage_ddl_path(), 1000)
+        self.__stage_dao = StageDAO(self.__prior_connector)
+        self.__laser_dao = LaserDAO(self.__prior_connector)
+
         self.__running_thread = None
         self.__laser_connector = None
         self.__service_app_params = None
+
         self.__logger = logging.getLogger(__name__)
 
-    def init_stage(self, com_port: str):
-        com_port = int(com_port[3:])
-        self.__stage_dao.initialize(com_port)
+    # FIXME needs to be executed in other thread
+    # FIXME Timeout needs to be added
+    def init_prior(self, com_port: str) -> ServiceError:
+        try:
+            com_port = int(com_port[3:])
+            self.__prior_connector.initialize(com_port)
+            response = self.__prior_connector.open_session()
+            if response == "0":
+                return ServiceError.OK
+            self.__logger.error(response)
+            return ServiceError.PRIOR_CONNECT_ERROR
+        except Exception as e:
+            self.__logger.error(e)
+            return ServiceError.PRIOR_CONNECT_ERROR
 
+    def close_session(self) -> ServiceError:
+        try:
+            self.__prior_connector.disconnect_stage()
+            close_session_response = self.__prior_connector.close_session()
+            if close_session_response == "0":
+                return ServiceError.OK
+            self.__logger.error(close_session_response)
+            return ServiceError.PRIOR_DISCONNECT_ERROR
+        except Exception as e:
+            self.__logger.error(e)
+            return ServiceError.PRIOR_DISCONNECT_ERROR
+
+    # TODO think what to do with LaserConnector move it to LaserDAO or leave it in Service
     def init_laser(self, com_port: str):
         self.__laser_connector = LaserConnector(com_port)
 
@@ -38,23 +67,9 @@ class Service:
     def get_stage_status(self) -> StageStatus:
         return StageStatus(running=self.__stage_dao.running, position=self.__stage_dao.position)
 
-    def open_session(self, com: str = "") -> ServiceError:
-        com = self.__yaml.get_stage_com_port() if not com else ""
-        self.__stage_dao.set_com_port(int(com))  # Fixme removed [-1] for testing
-        open_session_response = self.__stage_dao.open_session()
-        if open_session_response.error.error == ServiceError.STAGE_CONNECT_ERROR:
-            self.__stage_dao.close_session(close_normally=False)
-        return open_session_response.error.error
-
-    def close_session(self):
-        close_session_response = self.__stage_dao.close_session()
-        return close_session_response.error.error
-        # if close_session_response.error.error == ServiceError.STAGE_ERROR:
-        #     pass
-        #     # TODO info do frontu?
-
     def set_service_params(self, stage_width: int, stage_height: int, canvas_width: int, canvas_height: int):
-        self.__service_app_params = ServiceAppParams(scale_x=stage_width / canvas_width, scale_y=stage_height / canvas_height)
+        self.__service_app_params = ServiceAppParams(scale_x=stage_width / canvas_width,
+                                                     scale_y=stage_height / canvas_height)
 
 
     # TODO check if function is working while stage is connected
@@ -137,15 +152,30 @@ class Service:
                 self.__logger.info(positions_response.data)
             time.sleep(0.2)
 
+    # TODO 23.05 need testing!
     def print_lines(self, lines: List[List[Tuple[int, int]]]):
-        for line in lines:
-            scaled_lines = StageUtils.scale_list_points(line,
-                                                        self.__service_app_params.scale_x,
-                                                        self.__service_app_params.scale_y)
-
+        scaled_lines = [StageUtils.scale_list_points(line, self.__service_app_params.scale_x,
+                                                     self.__service_app_params.scale_y) for line in lines]
         for line in scaled_lines:
-            self.__stage_dao.goto_position(line[0][0], line[0][1], speed=10000)
-            # TODO add here laser on
-            for x, y in line:
-                self.__stage_dao.goto_position(x, y, speed=10000)
-            # TODO: add here laser off
+            self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)     # Setting start laser position
+            self.__laser_dao.turn_laser(True)
+
+            position = len(line) - 1
+            error_counter = 0
+            while line:
+                x, y = line[position]
+                response = self.__stage_dao.goto_position(x, y, speed=10000)
+                if response.data == "0":
+                    position -= 1
+                    line.pop()
+                    error_counter = 0
+                else:
+                    time.sleep(0.1)
+                    error_counter += 1
+
+                if error_counter > 100:
+                    self.__stage_dao.stop_stage()
+                    self.__laser_dao.turn_laser(False)
+                    return ServiceError.STAGE_BUFFER_ERROR
+            self.__laser_dao.turn_laser(False)
+        return ServiceError.OK

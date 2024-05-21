@@ -1,10 +1,7 @@
-from typing import Callable
+from typing import Callable, List, Tuple
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
-    QGridLayout, QToolBar, QAction, QStatusBar, QMenuBar, QHBoxLayout
-from PyQt5.uic.properties import QtCore
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 
 from app.enums.service_errors import ServiceError
 from app.presentation.components.canvas import Canvas
@@ -60,8 +57,7 @@ class MainWindow(QMainWindow):
         self.buttons_list = [self.stage_management_grid.button_start,
                              self.stage_management_grid.button_calibration,
                              self.port_coms_grid.button_connect_laser,
-                             self.port_coms_grid.button_connect_stage
-                             ]
+                             self.port_coms_grid.button_connect_stage]
 
     def get_com_arduino(self) -> str:
         return self.port_coms_grid.get_laser_com
@@ -81,18 +77,18 @@ class MainWindow(QMainWindow):
 
     def setup_button_actions(self,
                              calibration: Callable[[int, int], ServiceError],
-                             laser_write: Callable[[int], None],
-                             stage_init: Callable[[str], None],
+                             laser_write: Callable[[List[List[Tuple[int, int]]]], None],
+                             prior_init: Callable[[str], ServiceError],
                              laser_init: Callable[[str], None]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
             lambda: self.handle_calibration_result(calibration)
         )
         self.stage_management_grid.button_start.clicked.connect(
-            lambda: laser_write(self.stage_management_grid.get_value())
+            lambda: laser_write(self.canvas.get_points)
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
-            lambda: stage_init(self.port_coms_grid.get_stage_com)
+            lambda: prior_init(self.port_coms_grid.get_stage_com)
         )
         self.port_coms_grid.button_connect_laser.clicked.connect(
             lambda: laser_init(self.port_coms_grid.get_laser_com)

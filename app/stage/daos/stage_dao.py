@@ -6,56 +6,56 @@ import logging
 from typing import Any, List
 
 from app.enums.service_errors import ServiceError
-from app.stage.daos.stage_connector import StageConnector
-from app.stage.errors.errors import StageConnectionError, StageExecuteError, StageOpenSessionError
+from app.stage.daos.prior_connector import PriorConnector
+from app.stage.errors.errors import StageExecuteError
 from app.stage.factories.commands_factory import CommandsFactory
 from app.stage.models.stage_models import StageResponse, StageError
-from app.stage_utils.yaml_manager import YamlData
 
 
 class StageDAO:
-    def __init__(self, yaml_data: YamlData):
-        self.__yaml_data = yaml_data
-        self.__com_port = None
+    def __init__(self, prior_connector: PriorConnector):
+        # self.__yaml_data = yaml_data
+        # self.__com_port = None
         # self.__com_port = self.__yaml_data.get_stage_com_port()
         self.__logger = logging.getLogger(__name__)
-        self.__stage = StageConnector(self.__yaml_data.get_stage_ddl_path(), 1000)
+        self.__stage = prior_connector
         self.__actual_speed = 1000
         self.running = False
         self.position = [0, 0]
 
-    def set_com_port(self, com_port: int):
-        self.__com_port = com_port
-
-    def initialize(self, com_port: int) -> StageResponse[Any]:
-        try:
-            self.__com_port = com_port
-            self.__stage.initialize()
-            return StageResponse[Any](data={}, error=StageError(error=ServiceError.OK, description=""))
-        except StageConnectionError as err:
-            return StageResponse[Any](data={}, error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
-                                                                return_status=err.msg))
-
-    def open_session(self) -> StageResponse[str]:
-        try:
-            return_status = self.__stage.open_session(self.__com_port)
-            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
-        except StageOpenSessionError as err:
-            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_OPEN_SESSION_ERROR,
-                                                                description=str(err), return_status=err.msg))
-        except StageExecuteError as err:
-            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_CONNECT_ERROR,
-                                                                description=str(err), return_status=err.msg))
-
-    def close_session(self, close_normally: bool = True) -> StageResponse:
-        try:
-            if close_normally:
-                self.__stage.disconnect_stage(self.__com_port)
-            return_status = self.__stage.close_session()
-            return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
-        except (StageOpenSessionError, StageExecuteError) as err:
-            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
-                                                                return_status=err.msg))
+    # def set_com_port(self, com_port: int):
+    #     self.__com_port = com_port
+    #
+    # TODO przenieść to do serwisu
+    # def initialize(self, com_port: int) -> StageResponse[Any]:
+    #     try:
+    #         self.__com_port = com_port
+    #         self.__stage.initialize()
+    #         return StageResponse[Any](data={}, error=StageError(error=ServiceError.OK, description=""))
+    #     except StageConnectionError as err:
+    #         return StageResponse[Any](data={}, error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
+    #                                                             return_status=err.msg))
+    #
+    # def open_session(self) -> StageResponse[str]:
+    #     try:
+    #         return_status = self.__stage.open_session(self.__com_port)
+    #         return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+    #     except StageOpenSessionError as err:
+    #         return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_OPEN_SESSION_ERROR,
+    #                                                             description=str(err), return_status=err.msg))
+    #     except StageExecuteError as err:
+    #         return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_CONNECT_ERROR,
+    #                                                             description=str(err), return_status=err.msg))
+    #
+    # def close_session(self, close_normally: bool = True) -> StageResponse:
+    #     try:
+    #         if close_normally:
+    #             self.__stage.disconnect_stage(self.__com_port)
+    #         return_status = self.__stage.close_session()
+    #         return StageResponse[str](data=return_status, error=StageError(error=ServiceError.OK, description=""))
+    #     except (StageOpenSessionError, StageExecuteError) as err:
+    #         return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR, description=str(err),
+    #                                                             return_status=err.msg))
 
     def goto_position(self, x: int, y: int, speed: int) -> StageResponse:
         try:
