@@ -11,6 +11,9 @@
 
 ### Changes
 
+bl4szk4 - 21.05.2024 ver 1.0.12:
+- added commands for TTL
+
 bl4szk4, pkarmanski - 18.05.2024 ver 1.0.11:
 - prepared notification class but it is not working yet
 - extended calibration function for getting measurements of stage size

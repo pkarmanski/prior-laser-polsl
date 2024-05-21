@@ -143,5 +143,9 @@ class Service:
                                                         self.__service_app_params.scale_x,
                                                         self.__service_app_params.scale_y)
 
-
-
+        for line in scaled_lines:
+            self.__stage_dao.goto_position(line[0][0], line[0][1], speed=10000)
+            # TODO add here laser on
+            for x, y in line:
+                self.__stage_dao.goto_position(x, y, speed=10000)
+            # TODO: add here laser off

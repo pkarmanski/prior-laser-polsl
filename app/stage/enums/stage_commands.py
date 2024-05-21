@@ -184,6 +184,23 @@ class ControlCommands(Enum):
     # Result: "0" or "1"
     GET_ENCODER_Y_FITTED = "controller.stage.encoder.y.fitted.get"
 
+    # Description:
+    # Returns the current tll input state
+    # Result: Integer representing the binary pin state of available TTL inputs TTLIN3..0
+    GET_TTL_INPUT_STATE = "controller.ttl.in.get"
+
+    # Description
+    # Returns the current tll output state
+    # Result: Integer representing the binary pin state of available TTL outputs TTLOUT3..0
+    GET_TTL_OUTPUT_STATE = "controller.ttl.out.get"
+
+    # Description:
+    # Sets the output TTL
+    # Params: dec representation of binary output state -> 0-15
+    # Result: "0"
+    SET_TTL_OUTPUT_STATE = "controller.ttl.out.set {}"
+
+
     def __init__(self, command: str):
         self.__command = command
 

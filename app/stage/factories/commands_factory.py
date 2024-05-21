@@ -128,3 +128,15 @@ class CommandsFactory:
     @staticmethod
     def get_encoder_y_fitted() -> str:
         return ControlCommands.GET_ENCODER_Y_FITTED.command
+
+    @staticmethod
+    def get_ttl_input_state() -> str:
+        return ControlCommands.GET_TTL_INPUT_STATE.command
+
+    @staticmethod
+    def get_ttl_output_state() -> str:
+        return ControlCommands.GET_TTL_OUTPUT_STATE.command
+
+    @staticmethod
+    def set_ttl_output_state(state: int) -> str:
+        return ControlCommands.SET_TTL_OUTPUT_STATE.command.format(state)
