@@ -71,11 +71,9 @@ class Service:
         self.__service_app_params = ServiceAppParams(scale_x=stage_width / canvas_width,
                                                      scale_y=stage_height / canvas_height)
 
-
-    # TODO check if function is working while stage is connected
     def calibrate(self, canvas_width: int, canvas_height: int) -> ServiceError:
         self.__stage_dao.running = True
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(-7000, -7000) # TODO: parameter
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(-10000, -10000) # TODO: parameter
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -96,7 +94,7 @@ class Service:
         self.__stage_dao.set_position(0, 0)
 
         # checking width and height
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(7000, 7000)   # TODO: parameter
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(10000, 10000)   # TODO: parameter
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -118,6 +116,7 @@ class Service:
 
         if position:
             self.set_service_params(position[0], position[1], canvas_width, canvas_height)
+            self.__stage_dao.goto_position(position[0]/2, position[1]/2, speed=10000)
         return ServiceError.OK
 
     @staticmethod
@@ -152,12 +151,15 @@ class Service:
                 self.__logger.info(positions_response.data)
             time.sleep(0.2)
 
-    # TODO 23.05 need testing!
+    # TODO: proper laser switching and consider triggers
     def print_lines(self, lines: List[List[Tuple[int, int]]]):
         scaled_lines = [StageUtils.scale_list_points(line, self.__service_app_params.scale_x,
                                                      self.__service_app_params.scale_y) for line in lines]
         for line in scaled_lines:
-            self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)     # Setting start laser position
+            self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
+            while(self.__stage_dao.get_running().data):
+                time.sleep(0.2)
+            # Setting start laser position
             self.__laser_dao.turn_laser(True)
 
             position = len(line) - 1
@@ -177,5 +179,7 @@ class Service:
                     self.__stage_dao.stop_stage()
                     self.__laser_dao.turn_laser(False)
                     return ServiceError.STAGE_BUFFER_ERROR
+            while self.__stage_dao.get_running().data:
+                time.sleep(0.2)
             self.__laser_dao.turn_laser(False)
         return ServiceError.OK

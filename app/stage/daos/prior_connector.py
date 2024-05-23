@@ -16,7 +16,6 @@ class PriorConnector:
         :arg __session_id: stores session id of current session
     """
 
-    # TODO: here connecting to proper com port, checking connection
     def __init__(self, path: str, reading_buffer_size: int):
         self.__logger = logging.getLogger(__name__)
         self.__stage_dll_path = path
