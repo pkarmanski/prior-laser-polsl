@@ -56,6 +56,7 @@ QPushButton#button-stage-management{
 }
 QPushButton#button-stage-management:disabled{
     background-color: #455646;
+    color: #7a6f6f;
 }
 QPushButton#button-stage-management:hover{
     background-color: #265229;
