@@ -72,6 +72,3 @@ class PriorConnector:
             self.__logger.info(f"Success {data}")
         self.__lock.release()
         return data
-
-    def is_initialized(self) -> bool:
-        return True if self.__SDKPrior else False

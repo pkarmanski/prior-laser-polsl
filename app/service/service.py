@@ -27,6 +27,7 @@ class Service:
         self.__laser_connector = None
         self.__service_app_params = None
 
+        self.__is_prior_connected = False
         self.__logger = logging.getLogger(__name__)
 
     # FIXME needs to be executed in other thread
@@ -37,6 +38,7 @@ class Service:
             self.__prior_connector.initialize(com_port)
             response = self.__prior_connector.open_session()
             if response == "0":
+                self.__is_prior_connected = True
                 return ServiceError.OK
             self.__logger.error(response)
             return ServiceError.PRIOR_CONNECT_ERROR
@@ -183,7 +185,7 @@ class Service:
         return ServiceError.OK
 
     def get_stage_info(self) -> List:
-        if self.__prior_connector.is_initialized():
+        if self.__is_prior_connected:
             response = self.__stage_dao.get_position()
             if response.error == ServiceError.OK:
                 x, y = response.data
