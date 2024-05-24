@@ -80,7 +80,8 @@ class StageDAO:
     def get_running(self) -> StageResponse[bool]:
         try:
             command = CommandsFactory.get_busy()
-            running = self.__stage.execute(command)  # TODO check behaviour
+            running = self.__stage.execute(command)
+            self.running = True if running != "0" else False
             return StageResponse[bool](data=running != "0", error=StageError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return StageResponse[bool](data=None, error=StageError(error=ServiceError.STAGE_ERROR,

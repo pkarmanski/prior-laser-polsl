@@ -79,7 +79,8 @@ class MainWindow(QMainWindow):
                              calibration: Callable[[int, int], ServiceError],
                              laser_write: Callable[[List[List[Tuple[int, int]]]], None],
                              prior_init: Callable[[str], ServiceError],
-                             laser_init: Callable[[str], None]):
+                             laser_init: Callable[[str], None],
+                             stage_info: Callable[[], List]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
             lambda: self.handle_calibration_result(calibration)
@@ -93,6 +94,7 @@ class MainWindow(QMainWindow):
         self.port_coms_grid.button_connect_laser.clicked.connect(
             lambda: laser_init(self.port_coms_grid.get_laser_com)
         )
+        self.stage_info_grid.start_timer(stage_info)
 
     def show_notification(self, message: str, notification_variant: NotificationVariant, timeout=3000):
         notification = NotificationWindow(message, timeout)

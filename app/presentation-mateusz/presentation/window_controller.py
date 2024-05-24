@@ -20,7 +20,7 @@ class WindowController:
     def run(self):  # method for start of the application
         pass
         app = QApplication(sys.argv)
-        self.__main_panel = MainWindow()
+        self.__main_panel = MainWindow(self.__service.get_stage_info())
         self.__main_panel.show()
         sys.exit(app.exec())
 

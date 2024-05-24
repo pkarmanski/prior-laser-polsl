@@ -72,7 +72,6 @@ class Service:
                                                      scale_y=stage_height / canvas_height)
 
     def calibrate(self, canvas_width: int, canvas_height: int) -> ServiceError:
-        self.__stage_dao.running = True
         move_at_velocity_response = self.__stage_dao.move_at_velocity(-10000, -10000) # TODO: parameter
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
@@ -111,7 +110,6 @@ class Service:
                 limits = limit_check_response.data
             time.sleep(1)
         self.__stage_dao.move_at_velocity(0, 0)
-        self.__stage_dao.running = False
         position = self.__stage_dao.get_position().data
 
         if position:
@@ -157,7 +155,7 @@ class Service:
                                                      self.__service_app_params.scale_y) for line in lines]
         for line in scaled_lines:
             self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
-            while(self.__stage_dao.get_running().data):
+            while self.__stage_dao.get_running().data:
                 time.sleep(0.2)
             # Setting start laser position
             self.__laser_dao.turn_laser(True)
@@ -183,3 +181,14 @@ class Service:
                 time.sleep(0.2)
             self.__laser_dao.turn_laser(False)
         return ServiceError.OK
+
+    def get_stage_info(self) -> List:
+        if self.__prior_connector.is_initialized():
+            response = self.__stage_dao.get_position()
+            if response.error == ServiceError.OK:
+                x, y = response.data
+            else:
+                x, y = "Err", "Err"
+        else:
+            x, y = "NONE", "NONE"
+        return [x, y, self.__stage_dao.running]
