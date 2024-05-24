@@ -21,6 +21,8 @@ Printing -
 
 bl4szk4, pkarmanski - 24.05.2024 ver 1.0.13:
 - Displaying position on main panel
+- Added Prior connection handling
+- Disabling other buttons but connection buttons at start
 
 bl4szk4, pkarmanski - 21.05.2024 ver 1.0.12:
 - added commands for TTL

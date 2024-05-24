@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
 
         self.customize_init()
         self.buttons_list = []
+        self.connected_items = {'prior': False, 'laser': False}
 
     def customize_init(self):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)
@@ -59,6 +60,11 @@ class MainWindow(QMainWindow):
                              self.port_coms_grid.button_connect_laser,
                              self.port_coms_grid.button_connect_stage]
 
+        # disabling other buttons but connect
+        self.enable_buttons(False)
+        self.port_coms_grid.button_connect_laser.setEnabled(True)
+        self.port_coms_grid.button_connect_stage.setEnabled(True)
+
     def get_com_arduino(self) -> str:
         return self.port_coms_grid.get_laser_com
 
@@ -75,6 +81,20 @@ class MainWindow(QMainWindow):
 
         self.enable_buttons(True)
 
+    # TODO: add laser Errors
+    def handle_connection_laser(self, connect: Callable[[str], None]):
+        pass
+
+    def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
+        response = connect(self.port_coms_grid.get_stage_com)
+        if response == ServiceError.OK:
+            self.connected_items['prior'] = True
+            if self.connected_items['laser']:
+                self.enable_buttons(True)
+        else:
+            message = response.description
+            # TODO: add notification
+
     def setup_button_actions(self,
                              calibration: Callable[[int, int], ServiceError],
                              laser_write: Callable[[List[List[Tuple[int, int]]]], None],
@@ -89,7 +109,7 @@ class MainWindow(QMainWindow):
             lambda: laser_write(self.canvas.get_points)
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
-            lambda: prior_init(self.port_coms_grid.get_stage_com)
+            lambda: self.handle_connection_prior(prior_init)
         )
         self.port_coms_grid.button_connect_laser.clicked.connect(
             lambda: laser_init(self.port_coms_grid.get_laser_com)

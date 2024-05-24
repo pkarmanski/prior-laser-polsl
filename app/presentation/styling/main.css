@@ -39,6 +39,7 @@ QMenu{
 QMenu::item::selected{
     background-color: #323844;
 }
+
 QPushButton#button-stage-management{
     background-color: #18361a;
     border: none;
@@ -52,6 +53,9 @@ QPushButton#button-stage-management{
     cursor: pointer;
     border-radius: 12px;
     transition-duration: 0.4s;
+}
+QPushButton#button-stage-management:disabled{
+    background-color: #455646;
 }
 QPushButton#button-stage-management:hover{
     background-color: #265229;
@@ -79,6 +83,8 @@ QPushButton#button-connect:hover{
 QPushButton#button-connect:pressed{
     background-color: #07084b;
 }
+
+
 
 QWidget#widget-canvas{
     background-color: white;
