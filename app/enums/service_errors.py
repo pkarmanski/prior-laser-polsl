@@ -9,6 +9,7 @@ class ServiceError(Enum):
     PRIOR_DISCONNECT_ERROR = (4, "PRIOR_DISCONNECT_ERROR")
     STAGE_CALIBRATION_ERROR = (4, "STAGE_CALIBRATION_ERROR")
     STAGE_BUFFER_ERROR = (5, "STAGE_BUFFER_ERROR")
+    LASER_ERROR = (6, "LASER_ERROR")
 
 
     def __init__(self, code: int, description: str):

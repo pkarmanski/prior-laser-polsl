@@ -62,9 +62,10 @@ class Service:
     def init_laser(self, com_port: str):
         self.__laser_connector = LaserConnector(com_port)
 
-    def laser_write(self, value):
+    def laser_write(self, value) -> ServiceError:
         self.__logger.info(self.__laser_connector)
-        self.__laser_connector.write_data(value)
+        response = self.__laser_connector.write_data(value)
+        return response.error.error
 
     def get_stage_status(self) -> StageStatus:
         return StageStatus(running=self.__stage_dao.running, position=self.__stage_dao.position)

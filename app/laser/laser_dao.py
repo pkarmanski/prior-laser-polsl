@@ -4,7 +4,7 @@ from app.enums.service_errors import ServiceError
 from app.stage.daos.prior_connector import PriorConnector
 from app.stage.errors.errors import StageExecuteError
 from app.stage.factories.commands_factory import CommandsFactory
-from app.stage.models.stage_models import StageResponse, StageError
+from app.stage.models.stage_models import DaoResponse, DaoError
 
 
 class LaserDAO:
@@ -17,10 +17,10 @@ class LaserDAO:
         try:
             command = CommandsFactory.set_ttl_output_state(1) if turn_on else CommandsFactory.set_ttl_output_state(0)
             response = self.__prior.execute(command)
-            return StageResponse[str](data=response, error=StageError(error=ServiceError.OK, description=""))
+            return DaoResponse[str](data=response, error=DaoError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
-            return StageResponse[str](data="", error=StageError(error=ServiceError.STAGE_ERROR,
-                                                                description=str(err),
-                                                                return_status=err.msg))
+            return DaoResponse[str](data="", error=DaoError(error=ServiceError.STAGE_ERROR,
+                                                            description=str(err),
+                                                            return_status=err.msg))
 
 
