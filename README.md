@@ -21,6 +21,8 @@ Printing -
 
 pkarmanski - 27.05.2024 ver 1.0.14:
 - added try catch for laser dao
+- added handler for laser init
+- tried to make notification
 
 bl4szk4, pkarmanski - 24.05.2024 ver 1.0.13:
 - Displaying position on main panel
