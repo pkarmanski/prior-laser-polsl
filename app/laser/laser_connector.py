@@ -12,14 +12,16 @@ class LaserConnector:
         self.__com_port = com_port
         self.__baudrate = 115200
         self.__timeout = 0.1
-        self.__laser = serial.Serial(self.__com_port, self.__baudrate, timeout=self.__timeout)
+        self.__laser = None
         self.__logger = logging.getLogger(__name__)
 
-    def set_com_port(self, com_port: str) -> DaoResponse[str]:
+    def connect(self) -> DaoResponse[str]:
         try:
-            self.__com_port = com_port
+            self.__logger.info("connecting to laser")
             self.__laser = serial.Serial(self.__com_port, self.__baudrate, timeout=self.__timeout)
-            return DaoResponse[str](data="", error=DaoError(error=ServiceError.OK, description=""))
+            if self.__laser.isOpen():
+                return DaoResponse[str](data="", error=DaoError(error=ServiceError.OK, description=""))
+            return DaoResponse[str](data="", error=DaoError(error=ServiceError.LASER_ERROR, description=""))
         except Exception as err:
             self.__logger.error(err)
             return DaoResponse[str](data="", error=DaoError(error=ServiceError.LASER_ERROR, description=str(err)))

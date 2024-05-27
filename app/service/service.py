@@ -59,8 +59,10 @@ class Service:
             return ServiceError.PRIOR_DISCONNECT_ERROR
 
     # TODO think what to do with LaserConnector move it to LaserDAO or leave it in Service
-    def init_laser(self, com_port: str):
+    def init_laser(self, com_port: str) -> ServiceError:
         self.__laser_connector = LaserConnector(com_port)
+        response = self.__laser_connector.connect()
+        return response.error.error
 
     def laser_write(self, value) -> ServiceError:
         self.__logger.info(self.__laser_connector)

@@ -7,7 +7,7 @@ from app.enums.service_errors import ServiceError
 from app.presentation.components.canvas import Canvas
 from app.presentation.components.com_port_grid import ComPortsGrid
 from app.presentation.components.menu_bar import MenuBar
-from app.presentation.components.notification import NotificationWindow
+from app.presentation.components.notification import Notification
 from app.presentation.components.stage_info_grid import StageInfoGrid
 from app.presentation.components.stage_management_grid import StageManagementGrid
 from app.presentation.enums.notification_variant import NotificationVariant
@@ -82,8 +82,17 @@ class MainWindow(QMainWindow):
         self.enable_buttons(True)
 
     # TODO: add laser Errors
-    def handle_connection_laser(self, connect: Callable[[str], None]):
-        pass
+    def handle_connection_laser(self, connect: Callable[[str], ServiceError]):
+        response = connect(self.port_coms_grid.get_laser_com)
+        if response == ServiceError.OK:
+            self.connected_items['laser'] = True
+            if self.connected_items['prior']:
+                self.enable_buttons(True)
+            self.show_notification("Connected", NotificationVariant.Success)
+        else:
+            message = response.description
+            self.show_notification("ERROR", NotificationVariant.Error)
+            # TODO: add notification
 
     def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_stage_com)
@@ -93,13 +102,14 @@ class MainWindow(QMainWindow):
                 self.enable_buttons(True)
         else:
             message = response.description
+            self.show_notification("TEST notifikacji", NotificationVariant.Error)
             # TODO: add notification
 
     def setup_button_actions(self,
                              calibration: Callable[[int, int], ServiceError],
                              laser_write: Callable[[List[List[Tuple[int, int]]]], None],
                              prior_init: Callable[[str], ServiceError],
-                             laser_init: Callable[[str], None],
+                             laser_init: Callable[[str], ServiceError],
                              stage_info: Callable[[], List]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
@@ -112,14 +122,13 @@ class MainWindow(QMainWindow):
             lambda: self.handle_connection_prior(prior_init)
         )
         self.port_coms_grid.button_connect_laser.clicked.connect(
-            lambda: laser_init(self.port_coms_grid.get_laser_com)
+            lambda: self.handle_connection_laser(laser_init)
         )
         self.stage_info_grid.start_timer(stage_info)
 
     def show_notification(self, message: str, notification_variant: NotificationVariant, timeout=3000):
-        notification = NotificationWindow(message, timeout)
-        notification.setObjectName(notification_variant.object_name)
-        notification.show_notification()
+        notification = Notification()
+        notification.notify("Test", message, 3000)
 
     def enable_buttons(self, enabled: bool = True):
         for button in self.buttons_list:

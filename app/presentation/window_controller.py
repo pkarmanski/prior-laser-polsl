@@ -8,6 +8,7 @@ from time import sleep
 from PyQt5.QtWidgets import QApplication
 
 from app.enums.service_errors import ServiceError
+from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.panels.main_panel import MainWindow
 from app.service.service import Service
 import threading
