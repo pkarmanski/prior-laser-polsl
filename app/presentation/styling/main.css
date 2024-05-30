@@ -2,12 +2,13 @@ QLabel#stage-info-element{
     padding-top: 20px;
     font-size: 20px;
     color: white;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     border-spacing: 10px;
 }
 QFrame#basic-frame{
     background-color: #222a2d;
     max-width: 300px;
+    height: fit-content;
 
 }
 QMainWindow{
@@ -38,6 +39,7 @@ QMenu{
 QMenu::item::selected{
     background-color: #323844;
 }
+
 QPushButton#button-stage-management{
     background-color: #18361a;
     border: none;
@@ -52,12 +54,39 @@ QPushButton#button-stage-management{
     border-radius: 12px;
     transition-duration: 0.4s;
 }
+QPushButton#button-stage-management:disabled{
+    background-color: #455646;
+    color: #7a6f6f;
+}
 QPushButton#button-stage-management:hover{
     background-color: #265229;
  }
 QPushButton#button-stage-management:pressed{
     background-color: #122613;
 }
+
+QPushButton#button-connect{
+    background-color: #0c0e34;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+}
+QPushButton#button-connect:hover{
+    background-color: #1c1e7c;
+ }
+QPushButton#button-connect:pressed{
+    background-color: #07084b;
+}
+
+
+
 QWidget#widget-canvas{
     background-color: white;
     border-radius: 2px;
@@ -89,4 +118,38 @@ QComboBox::drop-down {
 
 QComboBox:hover {
     border-color: #090e11;
+}
+QPushButton#button-connect{
+    background-color: #0c0e34;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+}
+QPushButton#button-connect:hover{
+    background-color: #1c1e7c;
+ }
+QPushButton#button-connect:pressed{
+    background-color: #07084b;
+}
+
+QWidget#notification-error{
+    background-color: #2e7d32;
+    color: #ffffff;
+    border: 2px solid #1b5e20;
+    border-radius: 10px;
+}
+
+
+QWidget#notification-success{
+    background-color: #b71c1c;
+    color: #ffffff;
+    border: 2px solid #7f0000;
+    border-radius: 10px;
 }

@@ -7,7 +7,7 @@ from app.stage.errors.errors import StageConnectionError, StageOpenSessionError,
 from app.stage.factories.commands_factory import CommandsFactory
 
 
-class StageConnector:
+class PriorConnector:
     """
     Attributes:
         :arg __read_buffer: buffer for communication with stage
@@ -16,16 +16,17 @@ class StageConnector:
         :arg __session_id: stores session id of current session
     """
 
-    # TODO: here connecting to proper com port, checking connection
     def __init__(self, path: str, reading_buffer_size: int):
         self.__logger = logging.getLogger(__name__)
         self.__stage_dll_path = path
         self.__read_buffer = create_string_buffer(reading_buffer_size)
         self.__SDKPrior = None
         self.__session_id = None
+        self.__com_port = None
         self.__lock = Lock()
 
-    def initialize(self):
+    def initialize(self, com_port: int):
+        self.__com_port = com_port
         self.__SDKPrior = ctypes.WinDLL(self.__stage_dll_path)
         return_status = self.__SDKPrior.PriorScientificSDK_Initialise()
         if return_status:
@@ -34,14 +35,14 @@ class StageConnector:
         else:
             self.__logger.info(f"Prior initialized: {return_status}")
 
-    def open_session(self, com: int):
+    def open_session(self):
         self.__session_id = self.__SDKPrior.PriorScientificSDK_OpenNewSession()
         if self.__session_id < 0:
             self.__logger.critical(f"Open session error: {self.__session_id}")
             raise StageOpenSessionError(str(self.__session_id))
         else:
             self.__logger.info(f"Session opened: {self.__session_id}")
-            return self.execute(CommandsFactory.connect_stage(com))
+            return self.execute(CommandsFactory.connect_stage(self.__com_port))
 
     def close_session(self):
         return_status = self.__SDKPrior.PriorScientificSDK_CloseSession(self.__session_id)
@@ -53,8 +54,8 @@ class StageConnector:
         data = self.__read_buffer.value.decode()
         return data
 
-    def disconnect_stage(self, com: int) -> str:
-        return self.execute(CommandsFactory.disconnect_stage(com))
+    def disconnect_stage(self) -> str:
+        return self.execute(CommandsFactory.disconnect_stage(self.__com_port))
 
     def execute(self, message: str) -> str:
         self.__lock.acquire()

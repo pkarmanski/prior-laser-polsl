@@ -7,12 +7,12 @@ from app.enums.service_errors import ServiceError
 T = TypeVar("T", bound=BaseModel)
 
 
-class StageError(BaseModel):
+class DaoError(BaseModel):
     error: ServiceError
     description: str
     return_status: int = 0
 
 
-class StageResponse(BaseModel, Generic[T]):
+class DaoResponse(BaseModel, Generic[T]):
     data: T
-    error: StageError
+    error: DaoError

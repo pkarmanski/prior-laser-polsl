@@ -9,7 +9,39 @@
 6. We are using python3.12.2
 7. Comments are not required, but please name your variables that while reading their name we will know what they do
 
+
+### Dictionary
+TODO
+Stage - 
+Laser - 
+Printing -
+
+
 ### Changes
+
+pkarmanski - 27.05.2024 ver 1.0.14:
+- added try catch for laser dao
+- added handler for laser init
+- tried to make notification
+
+bl4szk4, pkarmanski - 24.05.2024 ver 1.0.13:
+- Displaying position on main panel
+- Added Prior connection handling
+- Disabling other buttons but connection buttons at start
+
+bl4szk4, pkarmanski - 21.05.2024 ver 1.0.12:
+- added commands for TTL
+- stage_connector renamed to prior_connector
+- prior_connector moved from stage dao to service and now its is passed to stage dao and laser dao
+- moved from stage dao prior connections functions
+- created method for handling canvas input and "printing" them with stage and laser
+
+bl4szk4, pkarmanski - 18.05.2024 ver 1.0.11:
+- prepared notification class but it is not working yet
+- extended calibration function for getting measurements of stage size
+- prepared scaling function but it is not tested yet
+- connected function for calibration and laser writing with buttons
+- added buttons for creating stage and laser instances and connecting them with proper service functions
 
 bl4szk4 - 14.05.2024 ver 1.0.10
 - Added [css file](app/presentation/styling/main.css) for storing all custom styles
