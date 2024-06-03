@@ -3,6 +3,7 @@ This class will talk with repositories and will have logic for error handling
 and what to return to window when error happens
 """
 import logging
+import math
 import time
 
 from app.enums.service_errors import ServiceError
@@ -186,6 +187,30 @@ class Service:
                 time.sleep(0.2)
             self.__laser_dao.turn_laser(False)
         return ServiceError.OK
+
+    def draw_circles(self, radius: int, duration: int = 10, points: int = 200):
+        dt = duration / points
+        omega = 2 * math.pi / duration
+
+        for i in range(points):
+            t = i * dt
+            v_x = int(-radius * omega * math.sin(omega * t))
+            v_y = int(radius * omega * math.cos(omega * t))
+            self.__stage_dao.move_at_velocity(v_x, v_y)
+            time.sleep(dt)
+
+    def draw_arc(self, radius: int, angle_degrees: int, duration: int = 10, points: int = 200):
+        angle_radians = math.radians(angle_degrees)
+        dt = duration / points
+        omega_full_circle = 2 * math.pi / duration
+        omega = omega_full_circle * (angle_radians / (2 * math.pi))
+
+        for i in range(points):
+            t = i * dt * (angle_radians / (2 * math.pi))
+            v_x = int(-radius * omega * math.sin(omega * t))
+            v_y = int(radius * omega * math.cos(omega * t))
+            self.__stage_dao.move_at_velocity(v_x, v_y)
+            time.sleep(dt)
 
     def get_stage_info(self) -> List:
         if self.__is_prior_connected:
