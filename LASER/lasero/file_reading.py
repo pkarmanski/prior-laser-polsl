@@ -1,8 +1,12 @@
 import sys
 import ezdxf
 import math
+from typing import List, Tuple
+from ezdxf.document import Drawing
+from app.stage.enums.figures import Figures
 
-def read_dxf_file(file_path):
+
+def read_dxf_file(file_path: str) -> Drawing | None:
     try:
         doc = ezdxf.readfile(file_path)
         return doc
@@ -13,13 +17,14 @@ def read_dxf_file(file_path):
         print("Invalid or corrupted DXF file.")
         return None
 
-def get_coordinates(entity):
-    if entity.dxftype() == 'LINE':
+
+def get_coordinates(entity) -> Tuple[List, int | None, Figures]:
+    if entity.dxftype() == Figures.LINE.value:
         return [(entity.dxf.start.x, entity.dxf.start.y, entity.dxf.start.z),
-                (entity.dxf.end.x, entity.dxf.end.y, entity.dxf.end.z)], None, 'LINE'
-    elif entity.dxftype() == 'CIRCLE':
-        return [(entity.dxf.center.x, entity.dxf.center.y, entity.dxf.center.z)], entity.dxf.radius, 'CIRCLE'
-    elif entity.dxftype() == 'ARC':
+                (entity.dxf.end.x, entity.dxf.end.y, entity.dxf.end.z)], None, Figures.LINE
+    elif entity.dxftype() == Figures.CIRCLE.value:
+        return [(entity.dxf.center.x, entity.dxf.center.y, entity.dxf.center.z)], entity.dxf.radius, Figures.CIRCLE
+    elif entity.dxftype() == Figures.ARC.value:
         start_angle = entity.dxf.start_angle
         end_angle = entity.dxf.end_angle
         center = (entity.dxf.center.x, entity.dxf.center.y, entity.dxf.center.z)
@@ -35,13 +40,13 @@ def get_coordinates(entity):
             center[1] + radius * math.sin(math.radians(end_angle)),
             center[2]
         )
-        return [start_point, center, end_point], radius, 'ARC'
+        return [start_point, center, end_point], radius, Figures.ARC
     elif entity.dxftype() == 'POINT':
-        return [(entity.dxf.location.x, entity.dxf.location.y, entity.dxf.location.z)], None, 'POINT'
-    return [], None, None
+        return [(entity.dxf.location.x, entity.dxf.location.y, entity.dxf.location.z)], None, Figures.POINT
+    return [], None, Figures.NONE
 
 if __name__ == "__main__":
-    file_path = r"nazwa_pliku_do_zczytania.dxf"
+    file_path = r"C:\Users\blach\PycharmProjects\prior-laser-polsl\zo9pge7k.dxf"
     doc = read_dxf_file(file_path)
     if doc:
         print("DXF file read successfully!")

@@ -19,6 +19,10 @@ Printing -
 
 ### Changes
 
+bl4szk4 - 03.06.2024 ver 1.0.15:
+- added methods for drawing lines, circles and arcs
+- cleaned code for reading dxf files
+
 pkarmanski - 27.05.2024 ver 1.0.14:
 - added try catch for laser dao
 - added handler for laser init

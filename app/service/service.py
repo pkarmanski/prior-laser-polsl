@@ -5,7 +5,9 @@ and what to return to window when error happens
 import logging
 import math
 import time
-
+from ezdxf.layouts import Modelspace
+from LASER.lasero import file_reading
+from app.stage.enums.figures import Figures
 from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
 from app.laser.laser_dao import LaserDAO
@@ -199,18 +201,50 @@ class Service:
             self.__stage_dao.move_at_velocity(v_x, v_y)
             time.sleep(dt)
 
-    def draw_arc(self, radius: int, angle_degrees: int, duration: int = 10, points: int = 200):
-        angle_radians = math.radians(angle_degrees)
+        self.__stage_dao.stop_stage()
+
+    def draw_arc(self, radius: int, angle: float, duration: int = 10, points: int = 200):
         dt = duration / points
         omega_full_circle = 2 * math.pi / duration
-        omega = omega_full_circle * (angle_radians / (2 * math.pi))
+        omega = omega_full_circle * (angle / (2 * math.pi))
 
         for i in range(points):
-            t = i * dt * (angle_radians / (2 * math.pi))
+            t = i * dt * (angle / (2 * math.pi))
             v_x = int(-radius * omega * math.sin(omega * t))
             v_y = int(radius * omega * math.cos(omega * t))
             self.__stage_dao.move_at_velocity(v_x, v_y)
             time.sleep(dt)
+
+        self.__stage_dao.stop_stage()
+
+    def draw(self, entities: Modelspace):
+        for entity in entities:
+            coords, radius, entity_type = file_reading.get_coordinates(entity)
+
+            start_point = coords[0]
+            self.__stage_dao.goto_position(start_point[0], start_point[1], speed=10000)
+            while self.__stage_dao.get_running().data:
+                time.sleep(0.2)
+            # Setting start laser position
+            self.__laser_dao.turn_laser(True)
+
+            if entity_type == Figures.LINE:
+                end_point = coords[1]
+                self.__stage_dao.goto_position(end_point[0], end_point[1], speed=10000)
+
+            elif entity_type == Figures.ARC:
+                center_point = coords[1]
+                end_point = coords[2]
+                angle = StageUtils.calculate_arc_angle(start_point, center_point, end_point, radius)
+                self.draw_arc(radius, angle)
+
+            elif entity_type == Figures.CIRCLE:
+                self.draw_circles(radius=radius, duration=10)
+
+            while self.__stage_dao.get_running().data:
+                time.sleep(0.2)
+            self.__laser_dao.turn_laser(False)
+        return ServiceError.OK
 
     def get_stage_info(self) -> List:
         if self.__is_prior_connected:
