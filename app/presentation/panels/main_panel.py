@@ -2,7 +2,7 @@ from typing import Callable, List, Tuple
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
-
+from threading import Thread
 from app.enums.service_errors import ServiceError
 from app.presentation.components.canvas import Canvas
 from app.presentation.components.com_port_grid import ComPortsGrid
@@ -12,7 +12,6 @@ from app.presentation.components.stage_info_grid import StageInfoGrid
 from app.presentation.components.stage_management_grid import StageManagementGrid
 from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
-
 
 
 class MainWindow(QMainWindow):
@@ -108,7 +107,7 @@ class MainWindow(QMainWindow):
 
     def setup_button_actions(self,
                              calibration: Callable[[int, int], ServiceError],
-                             laser_write: Callable[[List[List[Tuple[int, int]]]], None],
+                             laser_write: Callable[[List[List[Tuple[int, int]]], str, bool], None],
                              prior_init: Callable[[str], ServiceError],
                              laser_init: Callable[[str], ServiceError],
                              stage_info: Callable[[], List]):
@@ -117,7 +116,7 @@ class MainWindow(QMainWindow):
             lambda: self.handle_calibration_result(calibration)
         )
         self.stage_management_grid.button_start.clicked.connect(
-            lambda: laser_write(self.canvas.get_points)
+            lambda: laser_write(self.canvas.get_points, self.selected_files[0], True)  #TODO add check box for switching modes
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
             lambda: self.handle_connection_prior(prior_init)
@@ -125,11 +124,11 @@ class MainWindow(QMainWindow):
         self.port_coms_grid.button_connect_laser.clicked.connect(
             lambda: self.handle_connection_laser(laser_init)
         )
-        self.stage_info_grid.start_timer(stage_info)
+        self.stage_info_grid.start_timer(stage_info) # TODO think later about how to run it in different thread
 
     def show_notification(self, message: str, notification_variant: NotificationVariant, timeout=3000):
         notification = Notification()
-        notification.notify("Test", message, 3000)
+        notification.notify("Test", message)
 
     def enable_buttons(self, enabled: bool = True):
         for button in self.buttons_list:

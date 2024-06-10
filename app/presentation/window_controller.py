@@ -4,20 +4,16 @@ all visible components for render.
 This class should not be communicating directly with stage.
 """
 import sys
-from time import sleep
 from PyQt5.QtWidgets import QApplication
 
-from app.enums.service_errors import ServiceError
-from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.panels.main_panel import MainWindow
 from app.service.service import Service
-import threading
 
 
 class WindowController:
     def __init__(self):
         self.__service = Service()
-        self.__main_panel = None
+        self.__main_panel: MainWindow | None = None
         self.app = QApplication(sys.argv)
         self.style_panel()
 
@@ -41,18 +37,4 @@ class WindowController:
         with open('app/presentation/styling/main.css', 'r') as f:
             style = f.read()
             self.app.setStyleSheet(style)
-
-
-        # sys.exit(app.exec())
-
-        # open_session_response = self.__service.open_session()
-        #
-        # self.__service.calibrate()
-        # #
-        # check_position_thread = threading.Thread(target=self.__service.check_position, daemon=True)
-        #
-        # check_position_thread.start()
-        # self.__service.go_to_position(r'C:\Users\blach\PycharmProjects\prior-laser-polsl\test_postiotions.csv')
-        # check_position_thread.join()
-        # self.__service.close_session()
 

@@ -6,7 +6,7 @@ import logging
 import math
 import time
 from ezdxf.layouts import Modelspace
-from LASER.lasero import file_reading
+from LASER.lasero.file_reading import DXFReader
 from app.stage.enums.figures import Figures
 from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
@@ -158,37 +158,44 @@ class Service:
             time.sleep(0.2)
 
     # TODO: proper laser switching and consider triggers
-    def print_lines(self, lines: List[List[Tuple[int, int]]]):
-        scaled_lines = [StageUtils.scale_list_points(line, self.__service_app_params.scale_x,
-                                                     self.__service_app_params.scale_y) for line in lines]
-        for line in scaled_lines:
-            self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
-            while self.__stage_dao.get_running().data:
-                time.sleep(0.2)
-            # Setting start laser position
-            self.__laser_dao.turn_laser(True)
+    def print_lines(self, lines: List[List[Tuple[int, int]]], dxf_file_path: str, from_canvas: bool):
+        if from_canvas:
+            scaled_lines = [StageUtils.scale_list_points(line, self.__service_app_params.scale_x,
+                                                         self.__service_app_params.scale_y) for line in lines]
+            for line in scaled_lines:
+                self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
+                while self.__stage_dao.get_running().data:
+                    time.sleep(0.2)
+                # Setting start laser position
+                self.__laser_dao.turn_laser(True)
 
-            position = len(line) - 1
-            error_counter = 0
-            while line:
-                x, y = line[position]
-                response = self.__stage_dao.goto_position(x, y, speed=10000)
-                if response.data == "0":
-                    position -= 1
-                    line.pop()
-                    error_counter = 0
-                else:
-                    time.sleep(0.1)
-                    error_counter += 1
+                position = len(line) - 1
+                error_counter = 0
+                while line:
+                    x, y = line[position]
+                    response = self.__stage_dao.goto_position(x, y, speed=10000)
+                    if response.data == "0":
+                        position -= 1
+                        line.pop()
+                        error_counter = 0
+                    else:
+                        time.sleep(0.1)
+                        error_counter += 1
 
-                if error_counter > 100:
-                    self.__stage_dao.stop_stage()
-                    self.__laser_dao.turn_laser(False)
-                    return ServiceError.STAGE_BUFFER_ERROR
-            while self.__stage_dao.get_running().data:
-                time.sleep(0.2)
-            self.__laser_dao.turn_laser(False)
-        return ServiceError.OK
+                    if error_counter > 100:
+                        self.__stage_dao.stop_stage()
+                        self.__laser_dao.turn_laser(False)
+                        return ServiceError.STAGE_BUFFER_ERROR
+                while self.__stage_dao.get_running().data:
+                    time.sleep(0.2)
+                self.__laser_dao.turn_laser(False)
+            return ServiceError.OK
+        else:
+            if dxf_file_path:
+                dxf_file = self.__dxf_reader.read_dxf_file(dxf_file_path)
+                if dxf_file:
+                    return self.draw(dxf_file.modelspace())
+            return ServiceError.DXF_ERROR
 
     def draw_circles(self, radius: int, duration: int = 10, points: int = 200):
         dt = duration / points
@@ -240,7 +247,9 @@ class Service:
 
             elif entity_type == Figures.CIRCLE:
                 self.draw_circles(radius=radius, duration=10)
-
+            elif entity_type == Figures.NONE:
+                # TODO
+                pass
             while self.__stage_dao.get_running().data:
                 time.sleep(0.2)
             self.__laser_dao.turn_laser(False)
