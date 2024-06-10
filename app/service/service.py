@@ -25,7 +25,7 @@ class Service:
         self.__prior_connector = PriorConnector(self.__yaml.get_stage_ddl_path(), 1000)
         self.__stage_dao = StageDAO(self.__prior_connector)
         self.__laser_dao = LaserDAO(self.__prior_connector)
-
+        self.__dxf_reader = DXFReader()
         self.__running_thread = None
         self.__laser_connector = None
         self.__service_app_params = None
@@ -219,7 +219,7 @@ class Service:
 
     def draw(self, entities: Modelspace):
         for entity in entities:
-            coords, radius, entity_type = file_reading.get_coordinates(entity)
+            coords, radius, entity_type = self.__dxf_reader.get_coordinates(entity)
 
             start_point = coords[0]
             self.__stage_dao.goto_position(start_point[0], start_point[1], speed=10000)
@@ -235,7 +235,7 @@ class Service:
             elif entity_type == Figures.ARC:
                 center_point = coords[1]
                 end_point = coords[2]
-                angle = StageUtils.calculate_arc_angle(start_point, center_point, end_point, radius)
+                angle = StageUtils.calculate_arc_angle(start_point, center_point, end_point)
                 self.draw_arc(radius, angle)
 
             elif entity_type == Figures.CIRCLE:

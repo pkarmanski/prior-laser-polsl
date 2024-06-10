@@ -19,6 +19,12 @@ Printing -
 
 ### Changes
 
+bl4szk4, pkarmanski - 10.06.2024 ver 1.0.16:
+- refactored code for handling dxf files
+- changed notification for msg box
+- added method drawing to print_lines, so it will work depending on user choice
+- removed unused files
+
 bl4szk4 - 03.06.2024 ver 1.0.15:
 - added methods for drawing lines, circles and arcs
 - cleaned code for reading dxf files

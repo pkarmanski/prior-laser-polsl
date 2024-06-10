@@ -3,6 +3,7 @@ from typing import List, Tuple
 from serial.tools import list_ports
 import random
 
+
 class StageUtils:
     @staticmethod
     def get_coms() -> List[str]:
@@ -17,7 +18,7 @@ class StageUtils:
         return [random.random(), random.random(), True if random.randint(0, 1) else False]
 
     @staticmethod
-    def calculate_arc_angle(start, center, end, radius) -> float:
+    def calculate_arc_angle(start, center, end) -> float:
         x1, y1 = start
         cx, cy = center
         x2, y2 = end

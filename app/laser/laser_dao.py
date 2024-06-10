@@ -22,5 +22,3 @@ class LaserDAO:
             return DaoResponse[str](data="", error=DaoError(error=ServiceError.STAGE_ERROR,
                                                             description=str(err),
                                                             return_status=err.msg))
-
-
