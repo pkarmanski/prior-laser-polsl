@@ -123,6 +123,9 @@ class Service:
         if position:
             self.set_service_params(position[0], position[1], canvas_width, canvas_height)
             self.__stage_dao.goto_position(position[0]/2, position[1]/2, speed=10000)
+            while self.__stage_dao.get_running().data:
+                time.sleep(1)
+            self.__stage_dao.set_position(0, 0)
         return ServiceError.OK
 
     @staticmethod
@@ -210,7 +213,7 @@ class Service:
 
         self.__stage_dao.stop_stage()
 
-    def draw_arc(self, radius: int, angle: float, duration: int = 10, points: int = 200):
+    def draw_arc(self, radius: int, angle: float, duration: int = 50, points: int = 200):
         dt = duration / points
         omega_full_circle = 2 * math.pi / duration
         omega = omega_full_circle * (angle / (2 * math.pi))
@@ -227,8 +230,9 @@ class Service:
     def draw(self, entities: Modelspace):
         for entity in entities:
             coords, radius, entity_type = self.__dxf_reader.get_coordinates(entity)
-
-            start_point = coords[0]
+            entity_type =Figures.CIRCLE
+            radius = 10000
+            start_point = (0, 0)#coords[0]
             self.__stage_dao.goto_position(start_point[0], start_point[1], speed=10000)
             while self.__stage_dao.get_running().data:
                 time.sleep(0.2)
@@ -258,7 +262,7 @@ class Service:
     def get_stage_info(self) -> List:
         if self.__is_prior_connected:
             response = self.__stage_dao.get_position()
-            if response.error == ServiceError.OK:
+            if response.error.error == ServiceError.OK:
                 x, y = response.data
             else:
                 x, y = "Err", "Err"

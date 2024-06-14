@@ -1,5 +1,5 @@
 from typing import Callable, List, Tuple
-
+import asyncio
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 from threading import Thread
@@ -26,8 +26,8 @@ class MainWindow(QMainWindow):
         self.stage_management_grid = StageManagementGrid()
         self.port_coms_grid = ComPortsGrid()
 
-        self.customize_init()
         self.buttons_list = []
+        self.customize_init()
         self.connected_items = {'prior': False, 'laser': False}
 
     def customize_init(self):
@@ -105,6 +105,7 @@ class MainWindow(QMainWindow):
             self.show_notification("TEST notifikacji", NotificationVariant.Error)
             # TODO: add notification
 
+
     def setup_button_actions(self,
                              calibration: Callable[[int, int], ServiceError],
                              laser_write: Callable[[List[List[Tuple[int, int]]], str, bool], None],
@@ -114,9 +115,10 @@ class MainWindow(QMainWindow):
 
         self.stage_management_grid.button_calibration.clicked.connect(
             lambda: self.handle_calibration_result(calibration)
+            # lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
         )
         self.stage_management_grid.button_start.clicked.connect(
-            lambda: laser_write(self.canvas.get_points, self.selected_files[0], True)  #TODO add check box for switching modes
+            lambda: laser_write(self.canvas.get_points, self.selected_files[0], False)  #TODO add check box for switching modes
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
             lambda: self.handle_connection_prior(prior_init)
