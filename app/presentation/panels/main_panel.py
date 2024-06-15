@@ -1,7 +1,7 @@
 from typing import Callable, List, Tuple
 import asyncio
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QMessageBox
 from threading import Thread
 from app.enums.service_errors import ServiceError
 from app.presentation.components.canvas import Canvas
@@ -72,14 +72,16 @@ class MainWindow(QMainWindow):
         self.enable_buttons(False)
 
         calibration_result = calibration(self.canvas.width(), self.canvas.height())
-        notification_variant = NotificationVariant.Error
-        message = "ERROR"
         if calibration_result == ServiceError.OK:
-            notification_variant = NotificationVariant.Success
-            message = "SUCCESS"
-        self.show_notification(message, notification_variant)
+            self.show_notification(title="CALIBRATION",
+                                   message="Calibration is finished successfully",
+                                   notification_variant=NotificationVariant.Success)
 
-        self.enable_buttons(True)
+            self.enable_buttons(True)
+        self.show_notification(title="CALIBRATION",
+                               message="An error occured during calibration",
+                               informative_text=calibration_result.STAGE_CALIBRATION_ERROR.value,
+                               notification_variant=NotificationVariant.Error)
 
     # TODO: add laser Errors
     def handle_connection_laser(self, connect: Callable[[str], ServiceError]):
@@ -88,11 +90,14 @@ class MainWindow(QMainWindow):
             self.connected_items['laser'] = True
             if self.connected_items['prior']:
                 self.enable_buttons(True)
-            self.show_notification("Connected", NotificationVariant.Success)
+            self.show_notification(message="Successfully connected to the laser",
+                                   notification_variant=NotificationVariant.Success)
         else:
             message = response.description
-            self.show_notification("ERROR", NotificationVariant.Error)
-            # TODO: add notification
+            self.show_notification(title="ERROR",
+                                   message="Unable to connect to the laser",
+                                   informative_text=message,
+                                   notification_variant=NotificationVariant.Error)
 
     def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_stage_com)
@@ -102,9 +107,10 @@ class MainWindow(QMainWindow):
                 self.enable_buttons(True)
         else:
             message = response.description
-            self.show_notification("TEST notifikacji", NotificationVariant.Error)
-            # TODO: add notification
-
+            self.show_notification(title="ERROR",
+                                   message="Unable to connect to the stage",
+                                   informative_text=message,
+                                   notification_variant=NotificationVariant.Error)
 
     def setup_button_actions(self,
                              calibration: Callable[[int, int], ServiceError],
@@ -128,9 +134,14 @@ class MainWindow(QMainWindow):
         )
         self.stage_info_grid.start_timer(stage_info) # TODO think later about how to run it in different thread
 
-    def show_notification(self, message: str, notification_variant: NotificationVariant, timeout=3000):
-        notification = Notification()
-        notification.notify("Test", message)
+    @staticmethod
+    def show_notification(title: str = "SUCCESS",
+                          message: str = "",
+                          informative_text: str = None,
+                          notification_variant: NotificationVariant = NotificationVariant.Success,
+                          timeout=3000):
+        notification = Notification(notification_variant)
+        notification.notify(title, message, informative_text)
 
     def enable_buttons(self, enabled: bool = True):
         for button in self.buttons_list:

@@ -153,3 +153,73 @@ QWidget#notification-success{
     border: 2px solid #7f0000;
     border-radius: 10px;
 }
+
+/* CSS for modern QMessageBox */
+QMessageBox {
+    background-color: #2c3e50; /* Darker background for a modern look */
+    border: 1px solid #34495e;
+    border-radius: 10px;
+    padding: 20px;
+    color: #ecf0f1; /* Light text for contrast */
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+}
+
+QMessageBox QLabel {
+    color: #ecf0f1; /* Ensure text labels are light colored */
+}
+
+/* Notification style */
+QMessageBox#notification-success {
+    background-color: #27ae60; /* Green for notifications */
+    border-color: #2ecc71;
+}
+
+QMessageBox#notification-success QPushButton {
+    background-color: #2ecc71;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+QMessageBox#notification-success QPushButton:hover {
+    background-color: #27ae60;
+}
+
+/* Error style */
+QMessageBox#notification-error {
+    background-color: #e74c3c; /* Red for errors */
+    border-color: #c0392b;
+}
+
+QMessageBox#notification-error QPushButton {
+    background-color: #c0392b;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+QMessageBox#notification-error QPushButton:hover {
+    background-color: #e74c3c;
+}
+
+/* Choice style */
+QMessageBox#notification-choice {
+    background-color: #3498db; /* Blue for choices */
+    border-color: #2980b9;
+}
+
+QMessageBox#notification-choice QPushButton {
+    background-color: #2980b9;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+QMessageBox#notification-choice QPushButton:hover {
+    background-color: #3498db;
+}

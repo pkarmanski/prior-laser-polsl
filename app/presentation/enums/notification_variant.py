@@ -4,7 +4,7 @@ from enum import Enum
 class NotificationVariant(Enum):
     Error = 'notification-error'
     Success = 'notification-success'
-    Primary = 'notification-primary'
+    Choice = 'notification-choice'
 
     def __init__(self, object_name: str):
         self.__object_name = object_name

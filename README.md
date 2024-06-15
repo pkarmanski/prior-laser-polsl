@@ -19,6 +19,11 @@ Printing -
 
 ### Changes
 
+bl4szk4 - 15.06.2024 ver 1.0.17
+- Fixed notification
+- Added styling for notifications
+- Added basic notifications for connections and calibration
+
 bl4szk4, pkarmanski - 10.06.2024 ver 1.0.16:
 - refactored code for handling dxf files
 - changed notification for msg box
