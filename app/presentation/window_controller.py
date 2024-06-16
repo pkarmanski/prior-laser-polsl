@@ -4,6 +4,8 @@ all visible components for render.
 This class should not be communicating directly with stage.
 """
 import sys
+from typing import Union
+
 from PyQt5.QtWidgets import QApplication
 
 from app.presentation.panels.main_panel import MainWindow
@@ -13,7 +15,7 @@ from app.service.service import Service
 class WindowController:
     def __init__(self):
         self.__service = Service()
-        self.__main_panel: MainWindow | None = None
+        self.__main_panel: Union[MainWindow, None] = None
         self.app = QApplication(sys.argv)
         self.style_panel()
 

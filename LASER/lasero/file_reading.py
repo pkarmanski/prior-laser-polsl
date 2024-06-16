@@ -2,7 +2,7 @@ import logging
 import sys
 import ezdxf
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from ezdxf.document import Drawing
 from app.stage.enums.figures import Figures
 
@@ -11,7 +11,7 @@ class DXFReader:
     def __init__(self):
         self.__logger = logging.getLogger(__name__)
 
-    def read_dxf_file(self, file_path: str) -> Drawing | None:
+    def read_dxf_file(self, file_path: str) -> Union[Drawing, None]:
         try:
             return ezdxf.readfile(file_path)
         except Exception as e:
@@ -19,7 +19,7 @@ class DXFReader:
             print(e)
 
     @staticmethod
-    def get_coordinates(entity) -> Tuple[List, int | None, Figures | str]:
+    def get_coordinates(entity) -> Tuple[List, Union[int, None], Union[Figures, str]]:
         if entity.dxftype() == Figures.LINE.value:
             return [(entity.dxf.start.x, entity.dxf.start.y, entity.dxf.start.z),
                     (entity.dxf.end.x, entity.dxf.end.y, entity.dxf.end.z)], None, Figures.LINE

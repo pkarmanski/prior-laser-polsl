@@ -4,7 +4,7 @@ Class for directly accessing stage
 
 import logging
 from typing import Any, List
-
+from threading import Lock
 from app.enums.service_errors import ServiceError
 from app.stage.daos.prior_connector import PriorConnector
 from app.stage.errors.errors import StageExecuteError
@@ -19,6 +19,7 @@ class StageDAO:
         self.__actual_speed = 1000
         self.running = False
         self.position = [0, 0]
+        self.__running_lock = Lock()
 
     def goto_position(self, x: int, y: int, speed: int) -> DaoResponse:
         try:
@@ -78,7 +79,7 @@ class StageDAO:
         try:
             command = CommandsFactory.get_busy()
             running = self.__stage.execute(command)
-            self.running = True if running != "0" else False
+            self.set_running(True if running != "0" else False)
             return DaoResponse[bool](data=running != "0", error=DaoError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return DaoResponse[bool](data=None, error=DaoError(error=ServiceError.STAGE_ERROR,
@@ -94,3 +95,14 @@ class StageDAO:
             return DaoResponse[bool](data=None, error=DaoError(error=ServiceError.STAGE_ERROR,
                                                                description=str(err),
                                                                return_status=err.msg))
+
+    def set_running(self, running: bool):
+        self.__running_lock.acquire()
+        self.running = running
+        self.__running_lock.release()
+
+    def get_running(self) -> bool:
+        self.__running_lock.acquire()
+        running = self.running
+        self.__running_lock.release()
+        return running

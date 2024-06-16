@@ -1,3 +1,4 @@
+
 from pydantic import BaseModel
 
 
@@ -9,3 +10,5 @@ class StageStatus(BaseModel):
 class ServiceAppParams(BaseModel):
     scale_x: float
     scale_y: float
+
+

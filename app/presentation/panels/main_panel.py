@@ -1,6 +1,6 @@
 from typing import Callable, List, Tuple
 import asyncio
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QMessageBox
 from threading import Thread
 from app.enums.service_errors import ServiceError
@@ -106,6 +106,8 @@ class MainWindow(QMainWindow):
 
     def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_stage_com)
+        self.enable_buttons(True) #TODO for testing
+
         if response == ServiceError.OK:
             self.connected_items['prior'] = True
             if self.connected_items['laser']:
@@ -125,8 +127,7 @@ class MainWindow(QMainWindow):
                              stage_info: Callable[[], List]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
-            lambda: self.handle_calibration_result(calibration)
-            # lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
+            lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
         )
         self.stage_management_grid.button_start.clicked.connect(
             lambda: laser_write(self.canvas.get_points, self.selected_files[0], False)  #TODO add check box for switching modes

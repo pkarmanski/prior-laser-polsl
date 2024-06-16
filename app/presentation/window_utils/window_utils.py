@@ -1,5 +1,8 @@
 from PyQt5.QtWidgets import QFileDialog
+
 from app.presentation.components.additional_windows import Additional_Windows_Text
+
+
 
 class WindowUtils:
     @staticmethod
@@ -18,3 +21,4 @@ class WindowUtils:
     def text_window(main_window):   # FIXME zastanawiam sie czy napisac to jako funkcjie czy oddzielna klase, do okna
         main_window.text = Additional_Windows_Text
         main_window.text.show()
+
