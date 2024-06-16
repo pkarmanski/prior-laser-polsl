@@ -106,7 +106,6 @@ class MainWindow(QMainWindow):
 
     def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_stage_com)
-        self.enable_buttons(True) #TODO for testing
 
         if response == ServiceError.OK:
             self.connected_items['prior'] = True

@@ -53,8 +53,8 @@ class ComPortsGrid(BasicGrid):
             default_laser = self.com_ports.index(default_com_ports["laser"])
             default_stage = self.com_ports.index(default_com_ports["stage"])
 
-            self.combo_box_stage.setCurrentText(default_stage)
-            self.combo_box_laser.setCurrentText(default_laser)
+            self.combo_box_stage.setCurrentText(self.com_ports[default_stage])
+            self.combo_box_laser.setCurrentText(self.com_ports[default_laser])
         except ValueError:
             pass
 
