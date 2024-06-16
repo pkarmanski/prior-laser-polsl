@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
         self.setMinimumSize(1200, 700)
-        self.setWindowTitle("Beta-Aplikacja-Lasera")
+        self.setWindowTitle("LASER")
         self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
         self.setGeometry(100, 100, 100, 500)
         self.menu_bar.add_actions()
@@ -67,6 +67,7 @@ class MainWindow(QMainWindow):
         self.port_coms_grid.button_connect_stage.setEnabled(True)
 
     def closeEvent(self, a0):
+        self.port_coms_grid.save_default_com_ports()
         self.close_event()
 
     def get_com_arduino(self) -> str:

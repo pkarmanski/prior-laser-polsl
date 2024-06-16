@@ -1,3 +1,6 @@
+ports_params:
+  laser: COM11
+  stage: COM6
 stage_params:
-  path: ./app/stage/x64/PriorScientificSDK.dll
   COM: 6
+  path: ./app/stage/x64/PriorScientificSDK.dll
