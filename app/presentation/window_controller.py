@@ -26,7 +26,7 @@ class WindowController:
         self.__service.laser_write(value)
 
     def run(self):  # method for start of the application
-        self.__main_panel = MainWindow()
+        self.__main_panel = MainWindow(self.__service.close_session)
         self.__main_panel.setup_button_actions(self.__service.calibrate,
                                                self.__service.print_lines,
                                                self.__service.init_prior,

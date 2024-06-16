@@ -15,7 +15,7 @@ from app.presentation.icons.icons import Icons
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, close_event: Callable):
 
         # main window
         super(MainWindow, self).__init__()
@@ -29,6 +29,7 @@ class MainWindow(QMainWindow):
         self.buttons_list = []
         self.customize_init()
         self.connected_items = {'prior': False, 'laser': False}
+        self.close_event = close_event
 
     def customize_init(self):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)
@@ -64,6 +65,9 @@ class MainWindow(QMainWindow):
         self.enable_buttons(False)
         self.port_coms_grid.button_connect_laser.setEnabled(True)
         self.port_coms_grid.button_connect_stage.setEnabled(True)
+
+    def closeEvent(self, a0):
+        self.close_event()
 
     def get_com_arduino(self) -> str:
         return self.port_coms_grid.get_laser_com

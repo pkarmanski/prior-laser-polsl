@@ -51,17 +51,19 @@ class Service:
 
     def close_session(self) -> ServiceError:
         try:
+            self.__stage_dao.stop_stage()
             self.__prior_connector.disconnect_stage()
             close_session_response = self.__prior_connector.close_session()
             if close_session_response == "0":
                 return ServiceError.OK
             self.__logger.error(close_session_response)
             return ServiceError.PRIOR_DISCONNECT_ERROR
+        except AttributeError:
+            return ServiceError.OK
         except Exception as e:
             self.__logger.error(e)
             return ServiceError.PRIOR_DISCONNECT_ERROR
 
-    # TODO think what to do with LaserConnector move it to LaserDAO or leave it in Service
     def init_laser(self, com_port: str) -> ServiceError:
         self.__laser_connector = LaserConnector(com_port)
         response = self.__laser_connector.connect()
