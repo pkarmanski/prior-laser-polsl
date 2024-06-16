@@ -73,7 +73,7 @@ class Service:
         return response.error.error
 
     def get_stage_status(self) -> StageStatus:
-        return StageStatus(running=self.__stage_dao.running, position=self.__stage_dao.position)
+        return StageStatus(running=self.__stage_dao.get_running(), position=self.__stage_dao.position)
 
     def set_service_params(self, stage_width: int, stage_height: int, canvas_width: int, canvas_height: int):
         self.__service_app_params = ServiceAppParams(scale_x=stage_width / canvas_width,
@@ -90,7 +90,7 @@ class Service:
             if limit_check_response.error.error != ServiceError.OK:
                 error_count += 1
                 if error_count > 3:
-                    self.__stage_dao.running = False
+                    self.__stage_dao.set_running(False)
                     self.__stage_dao.move_at_velocity(0, 0)
                     return ServiceError.STAGE_CALIBRATION_ERROR
             else:
@@ -111,7 +111,7 @@ class Service:
             if limit_check_response.error.error != ServiceError.OK:
                 error_count += 1
                 if error_count > 3:
-                    self.__stage_dao.running = False
+                    self.__stage_dao.set_running(False)
                     self.__stage_dao.move_at_velocity(0, 0)
                     return ServiceError.STAGE_CALIBRATION_ERROR
             else:
@@ -122,7 +122,7 @@ class Service:
 
         if position:
             self.set_service_params(position[0], position[1], canvas_width, canvas_height)
-            self.__stage_dao.goto_position(position[0]/2, position[1]/2, speed=10000)
+            self.__stage_dao.goto_position(int(position[0]/2), int(position[1]/2), speed=10000)
             while self.__stage_dao.get_running().data:
                 time.sleep(1)
             self.__stage_dao.set_position(0, 0)
@@ -268,4 +268,4 @@ class Service:
                 x, y = "Err", "Err"
         else:
             x, y = "NONE", "NONE"
-        return [x, y, self.__stage_dao.running]
+        return [x, y, self.__stage_dao.get_running()]

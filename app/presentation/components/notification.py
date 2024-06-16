@@ -1,3 +1,5 @@
+from typing import Union
+
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QMessageBox
 from PyQt5.QtCore import Qt, QTimer
 from app.presentation.enums.notification_variant import NotificationVariant
@@ -15,7 +17,7 @@ class Notification(QWidget):
     def customize(self, variant: NotificationVariant):
         self.message_box.setObjectName(variant.object_name)
 
-    def notify(self, title: str, message: str, informative_text: str | None = None):
+    def notify(self, title: str, message: str, informative_text: Union[str, None] = None):
         self.message_box.setWindowTitle(title)
         if informative_text is not None:
             self.message_box.setInformativeText(informative_text)
