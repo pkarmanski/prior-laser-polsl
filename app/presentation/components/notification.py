@@ -12,6 +12,7 @@ class Notification(QWidget):
         self.setStyleSheet("background: #d3d7cf; padding: 0;")
         self.mainLayout = QVBoxLayout(self)
         self.message_box = QMessageBox()
+        self.message_box.setWindowFlags(Qt.FramelessWindowHint)
         self.customize(variant)
 
     def customize(self, variant: NotificationVariant):
