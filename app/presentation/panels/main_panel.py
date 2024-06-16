@@ -129,7 +129,8 @@ class MainWindow(QMainWindow):
             lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
         )
         self.stage_management_grid.button_start.clicked.connect(
-            lambda: laser_write(self.canvas.get_points, self.selected_files[0], False)  #TODO add check box for switching modes
+            lambda: laser_write(self.canvas.get_points, self.stage_management_grid.get_selected_file,
+                                self.stage_management_grid.check_box.isChecked())
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
             lambda: self.handle_connection_prior(prior_init)
@@ -151,3 +152,7 @@ class MainWindow(QMainWindow):
     def enable_buttons(self, enabled: bool = True):
         for button in self.buttons_list:
             button.setEnabled(enabled)
+
+    def upload_file(self, paths: List[str]):
+        for path in paths:
+            self.stage_management_grid.upload_file(path)

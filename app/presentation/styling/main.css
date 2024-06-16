@@ -223,3 +223,33 @@ QMessageBox#notification-choice QPushButton {
 QMessageBox#notification-choice QPushButton:hover {
     background-color: #3498db;
 }
+
+QCheckBox {
+    color: #ffffff;
+    spacing: 5px;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+QCheckBox::indicator:unchecked {
+    border: 1px solid #cccccc;
+    background-color: #2d2d2d;
+}
+
+QCheckBox::indicator:checked {
+    border: 1px solid #cccccc;
+    background-color: #4a8d4a;
+}
+
+QCheckBox::indicator:unchecked:hover {
+    border: 1px solid #ffffff;
+    background-color: #3a3a3a;
+}
+
+QCheckBox::indicator:checked:hover {
+    border: 1px solid #ffffff;
+    background-color: #5ba65b;
+}

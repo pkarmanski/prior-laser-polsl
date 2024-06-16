@@ -11,7 +11,9 @@ class WindowUtils:
         dialog.setFileMode(QFileDialog.FileMode.AnyFile)
         dialog.setNameFilter("CAD (*.DWG *.DWF *.DXF")
         dialog_success = dialog.exec()
-        main_window.selected_files = dialog.selectedFiles() if dialog_success else []
+        if dialog_success:
+
+            main_window.upload_file(dialog.selectedFiles())
 
     @staticmethod
     def test(main_window):  # Fixme to jest zmodyfikowana twoja funkcja test która wcześniej była w pliku functions
