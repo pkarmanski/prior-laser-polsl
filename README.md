@@ -19,13 +19,15 @@ Printing -
 
 ### Changes
 
-bl4szk4 - 15.06.2024 ver 1.0.17
+bl4szk4, pkarmanski - 15.06.2024 ver 1.0.17
 - Fixed notification
 - Added styling for notifications
 - Added basic notifications for connections and calibration
 - Added destructor for MainWindow so the stage is disconnected in a safe way
 - Setting default coms for stage and laser
 - Updating coms
+- Drag and drop for files and check box for source of drawing
+- Implementation of threading
 
 bl4szk4, pkarmanski - 10.06.2024 ver 1.0.16:
 - refactored code for handling dxf files
