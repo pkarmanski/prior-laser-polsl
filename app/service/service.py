@@ -6,8 +6,8 @@ import logging
 import math
 import time
 from ezdxf.layouts import Modelspace
-from LASER.lasero.file_reading import DXFReader
-from app.stage.enums.figures import Figures
+from app.files_processing.file_reading import DXFReader
+from app.files_processing.enums import Figures
 from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
 from app.laser.laser_dao import LaserDAO
