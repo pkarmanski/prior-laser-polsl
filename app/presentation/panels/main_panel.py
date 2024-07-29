@@ -12,7 +12,7 @@ from app.presentation.components.stage_info_grid import StageInfoGrid
 from app.presentation.components.stage_management_grid import StageManagementGrid
 from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
-
+from app.presentation.panels.processing_panel import ProcessingPanel
 
 class MainWindow(QMainWindow):
     def __init__(self, close_event: Callable):
@@ -89,20 +89,22 @@ class MainWindow(QMainWindow):
                                notification_variant=NotificationVariant.Error)
 
     # TODO: add laser Errors
-    def handle_connection_laser(self, connect: Callable[[str], ServiceError]):
-        response = connect(self.port_coms_grid.get_laser_com)
-        if response == ServiceError.OK:
-            self.connected_items['laser'] = True
-            if self.connected_items['prior']:
-                self.enable_buttons(True)
-            self.show_notification(message="Successfully connected to the laser",
-                                   notification_variant=NotificationVariant.Success)
-        else:
-            message = response.description
-            self.show_notification(title="ERROR",
-                                   message="Unable to connect to the laser",
-                                   informative_text=message,
-                                   notification_variant=NotificationVariant.Error)
+    def handle_connection_laser(self, ):
+        w = ProcessingPanel()
+        w.show()
+        # response = connect(self.port_coms_grid.get_laser_com)
+        # if response == ServiceError.OK:
+        #     self.connected_items['laser'] = True
+        #     if self.connected_items['prior']:
+        #         self.enable_buttons(True)
+        #     self.show_notification(message="Successfully connected to the laser",
+        #                            notification_variant=NotificationVariant.Success)
+        # else:
+        #     message = response.description
+        #     self.show_notification(title="ERROR",
+        #                            message="Unable to connect to the laser",
+        #                            informative_text=message,
+        #                            notification_variant=NotificationVariant.Error)
 
     def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_stage_com)
@@ -136,7 +138,7 @@ class MainWindow(QMainWindow):
             lambda: self.handle_connection_prior(prior_init)
         )
         self.port_coms_grid.button_connect_laser.clicked.connect(
-            lambda: self.handle_connection_laser(laser_init)
+            lambda: self.handle_connection_laser()
         )
         self.stage_info_grid.start_timer(stage_info) # TODO think later about how to run it in different thread
 
