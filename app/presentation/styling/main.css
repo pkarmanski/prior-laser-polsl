@@ -15,6 +15,10 @@ QMainWindow{
     background: #313338;
     align-items: end;
 }
+QWidget#processing-panel{
+    background: #313338;
+    align-items: end;
+}
 QMenuBar{
     border: 1px solid #64646c;
     border-radius: 2px;

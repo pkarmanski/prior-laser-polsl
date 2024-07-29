@@ -41,3 +41,4 @@ class ImportFileView(QListWidget):
         if event.key() == Qt.Key_Delete:
             for item in self.selectedItems():
                 self.takeItem(self.row(item))
+

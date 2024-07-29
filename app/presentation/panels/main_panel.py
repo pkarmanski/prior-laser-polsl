@@ -14,6 +14,7 @@ from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
 from app.presentation.panels.processing_panel import ProcessingPanel
 
+
 class MainWindow(QMainWindow):
     def __init__(self, close_event: Callable):
 
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
         self.customize_init()
         self.connected_items = {'prior': False, 'laser': False}
         self.close_event = close_event
+        self.progress_window = ProcessingPanel()
 
     def customize_init(self):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)
@@ -90,8 +92,7 @@ class MainWindow(QMainWindow):
 
     # TODO: add laser Errors
     def handle_connection_laser(self, ):
-        w = ProcessingPanel()
-        w.show()
+        self.progress_window.show()
         # response = connect(self.port_coms_grid.get_laser_com)
         # if response == ServiceError.OK:
         #     self.connected_items['laser'] = True

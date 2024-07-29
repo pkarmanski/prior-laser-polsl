@@ -1,5 +1,5 @@
 ports_params:
-  laser: COM5
+  laser: COM4
   stage: COM4
 stage_params:
   COM: 6
