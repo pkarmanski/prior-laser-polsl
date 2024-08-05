@@ -1,10 +1,9 @@
 from typing import Callable, List, Tuple
-import asyncio
-from PyQt5.QtCore import Qt, QThread
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QMessageBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 from threading import Thread
 from app.enums.service_errors import ServiceError
-from app.presentation.components.canvas import Canvas
+from app.presentation.components.canvas.canvas import Canvas
 from app.presentation.components.com_port_grid import ComPortsGrid
 from app.presentation.components.menu_bar import MenuBar
 from app.presentation.components.notification import Notification

@@ -8,15 +8,24 @@ from app.files_processing.enums import Figures
 
 
 class DXFReader:
-    def __init__(self):
+    def __init__(self, filename: str):
         self.__logger = logging.getLogger(__name__)
+        self.__filename = filename
+        self.__dxf = None
 
-    def read_dxf_file(self, file_path: str) -> Union[Drawing, None]:
+        self.read_dxf_file()
+
+    def read_dxf_file(self):
         try:
-            return ezdxf.readfile(file_path)
+            self.__dxf = ezdxf.readfile(self.__filename)
         except Exception as e:
             self.__logger.error(e)
-            print(e)
+
+    def get_figures(self) -> List:
+        msp = self.__dxf.modelspace()
+
+        figures = [self.get_coordinates(entity) for entity in msp]
+        return figures
 
     @staticmethod
     def get_coordinates(entity) -> Tuple[List, Union[int, list, None], Union[Figures, str]]:
@@ -65,33 +74,3 @@ class DXFReader:
             return [(p.x, p.y,) for p in points], None, Figures.SPLINE
 
         return [], None, Figures.NONE
-
-
-if __name__ == "__main__":
-    file_path = r"C:\Users\blach\PycharmProjects\prior-laser-polsl\eo4kry7j.dxf"
-    reader = DXFReader()
-    doc = reader.read_dxf_file(file_path)
-    if doc:
-        print("DXF file read successfully!")
-
-    msp = doc.modelspace()
-
-    for entity in msp:
-        coords, radius, entity_type = reader.get_coordinates(entity)
-        if entity_type == Figures.CIRCLE and radius is not None:
-            for coord in coords:
-                print(f"Coordinate: {coord}, Radius: {radius}, Type: {entity_type}")
-        elif entity_type == Figures.LINE:
-            if len(coords) == 2:
-                start = coords[0]
-                end = coords[1]
-                print(f"Start Coordinate: {start}, End Coordinate: {end}, Type: {entity_type}")
-        elif entity_type == Figures.ARC:
-            if len(coords) == 3:
-                start = coords[0]
-                center = coords[1]
-                end = coords[2]
-                print(f"Start Coordinate: {start}, Center Coordinate: {center}, End Coordinate: {end}, Radius: {radius}, Type: {entity_type}")
-        else:
-            for coord in coords:
-                print(f"Coordinate: {coord}, Type: {entity_type}")

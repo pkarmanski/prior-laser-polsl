@@ -19,6 +19,11 @@ Printing -
 
 ### Changes
 
+bl4szk4 - 05.08.2024 ver 1.0.18
+- Code refactor
+- Added new panel
+- changes in processing dxf file
+
 bl4szk4, pkarmanski - 15.06.2024 ver 1.0.17
 - Fixed notification
 - Added styling for notifications

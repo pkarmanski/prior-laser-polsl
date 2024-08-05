@@ -1,16 +1,17 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QApplication
 
-from app.presentation.components.canvas import Canvas
+from app.presentation.components.canvas.basic_canvas import BasicCanvas
 
 
 class ProcessingPanel(QWidget):
     def __init__(self):
         super().__init__()
-        self.canvas = Canvas()
+        self.canvas = BasicCanvas()
         self.init_grid()
         self.setup_window()
         self.setObjectName('processing-panel')
+        self.setWindowFlags(Qt.Window | Qt.MSWindowsFixedSizeDialogHint)
 
     def init_grid(self):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)

@@ -1,29 +1,27 @@
-import sys
-from typing import List, Tuple
 
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QPainter
 
+from app.presentation.components.canvas.basic_canvas import BasicCanvas
 
-class Canvas(QtWidgets.QWidget):
+
+class Canvas(BasicCanvas):
     def __init__(self):
         super().__init__()
-        self.setFixedSize(800, 600)
-        self.setObjectName('widget-canvas')
 
         self.last_pos = None
         self.current_pos = None
-        self.pen_color = QtGui.QColor('#000000')
 
         self.__lines = []
         self.__current_line = []
 
-    def set_pen_color(self, color='#000000'):
-        self.pen_color = QtGui.QColor(color)
-
     def paintEvent(self, event):
         painter = QPainter(self)
+        super().draw_grid(painter)
+
+        self.paint_from_canvas(painter)
+
+    def paint_from_canvas(self, painter: QPainter):
         pen = QPen(Qt.black, 2, Qt.SolidLine)
         painter.setPen(pen)
         for point in range(len(self.__current_line) - 1):
@@ -46,8 +44,4 @@ class Canvas(QtWidgets.QWidget):
         self.__lines.append(self.__current_line)
         self.__current_line = []
         self.update()
-
-    @property
-    def get_points(self) -> List[List[Tuple[int, int]]]:
-        return self.__lines
     
