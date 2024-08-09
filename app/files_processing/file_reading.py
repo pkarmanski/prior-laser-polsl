@@ -70,7 +70,7 @@ class DXFReader:
 
         elif entity_type == Figures.POLYLINE.value:
             spline_curve = entity.construction_tool()
-            points = list(spline_curve.flattening(0.01))  # Adjust the distance tolerance as needed
+            points = list(spline_curve.flattening(0.01))
             return [(p.x, p.y,) for p in points], None, Figures.SPLINE
 
         return [], None, Figures.NONE

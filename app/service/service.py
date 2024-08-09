@@ -25,7 +25,7 @@ class Service:
         self.__prior_connector = PriorConnector(self.__yaml.get_stage_ddl_path(), 1000)
         self.__stage_dao = StageDAO(self.__prior_connector)
         self.__laser_dao = LaserDAO(self.__prior_connector)
-        self.__dxf_reader = DXFReader()
+        self.__dxf_reader = None
         self.__running_thread = None
         self.__laser_connector = None
         self.__service_app_params = None
@@ -197,7 +197,8 @@ class Service:
             return ServiceError.OK
         else:
             if dxf_file_path:
-                dxf_file = self.__dxf_reader.read_dxf_file(dxf_file_path)
+                self.__dxf_reader = DXFReader(dxf_file_path)
+                dxf_file = self.__dxf_reader.read_dxf_file()
                 if dxf_file:
                     return self.draw(dxf_file.modelspace())
             return ServiceError.DXF_ERROR

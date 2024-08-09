@@ -12,6 +12,7 @@ from app.presentation.components.stage_management_grid import StageManagementGri
 from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
 from app.presentation.panels.processing_panel import ProcessingPanel
+from app.files_processing.file_reading import DXFReader
 
 
 class MainWindow(QMainWindow):
@@ -21,9 +22,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.menu_bar = MenuBar(self.menuBar(), self)
         self.selected_files = []
-        self.canvas = Canvas()
         self.stage_info_grid = StageInfoGrid()
         self.stage_management_grid = StageManagementGrid()
+        self.canvas = Canvas(draw_in_canvas=self.stage_management_grid.get_from_canvas_checkbox_state)
         self.port_coms_grid = ComPortsGrid()
 
         self.buttons_list = []
@@ -91,7 +92,10 @@ class MainWindow(QMainWindow):
 
     # TODO: add laser Errors
     def handle_connection_laser(self, ):
-        self.progress_window.show()
+        # self.progress_window.show()
+        dxf = DXFReader(self.stage_management_grid.get_selected_file)
+        figures = dxf.get_figures()
+        self.canvas.update_figures(figures)
         # response = connect(self.port_coms_grid.get_laser_com)
         # if response == ServiceError.OK:
         #     self.connected_items['laser'] = True
@@ -132,7 +136,7 @@ class MainWindow(QMainWindow):
         )
         self.stage_management_grid.button_start.clicked.connect(
             lambda: laser_write(self.canvas.get_points, self.stage_management_grid.get_selected_file,
-                                self.stage_management_grid.check_box.isChecked())
+                                self.stage_management_grid.from_canvas_checkbox.isChecked())
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
             lambda: self.handle_connection_prior(prior_init)

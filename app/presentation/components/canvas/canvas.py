@@ -1,12 +1,13 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QPainter
+from PyQt5.QtWidgets import QMainWindow
 
 from app.presentation.components.canvas.basic_canvas import BasicCanvas
 
 
 class Canvas(BasicCanvas):
-    def __init__(self):
+    def __init__(self, draw_in_canvas: callable):
         super().__init__()
 
         self.last_pos = None
@@ -14,12 +15,21 @@ class Canvas(BasicCanvas):
 
         self.__lines = []
         self.__current_line = []
+        self.__figures = []
+        self.draw_in_canvas = draw_in_canvas
+
+    @property
+    def paint_in_canvas(self) -> bool:
+        return self.__parent.from_canvas_button_state
 
     def paintEvent(self, event):
         painter = QPainter(self)
         super().draw_grid(painter)
 
-        self.paint_from_canvas(painter)
+        if self.draw_in_canvas():
+            self.paint_from_canvas(painter)
+        else:
+            self.clearMask()
 
     def paint_from_canvas(self, painter: QPainter):
         pen = QPen(Qt.black, 2, Qt.SolidLine)
@@ -33,15 +43,21 @@ class Canvas(BasicCanvas):
                                  line[point + 1][0], line[point + 1][1])
 
     def mousePressEvent(self, event):
-        self.__current_line = [(event.pos().x(), event.pos().y())]
+        if self.draw_in_canvas():
+            self.__current_line = [(event.pos().x(), event.pos().y())]
+            print(self.__current_line)
         self.update()
 
     def mouseMoveEvent(self, event):
-        self.__current_line.append((event.pos().x(), event.pos().y()))
+        if self.draw_in_canvas():
+            self.__current_line.append((event.pos().x(), event.pos().y()))
         self.update()
 
     def mouseReleaseEvent(self, event):
-        self.__lines.append(self.__current_line)
-        self.__current_line = []
-        self.update()
-    
+        if self.draw_in_canvas():
+            self.__lines.append(self.__current_line)
+            self.__current_line = []
+            self.update()
+
+    def update_figures(self, figures: list):
+        self.__figures = figures
