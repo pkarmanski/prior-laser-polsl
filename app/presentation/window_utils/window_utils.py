@@ -12,7 +12,6 @@ class WindowUtils:
         dialog.setNameFilter("CAD (*.DWG *.DWF *.DXF")
         dialog_success = dialog.exec()
         if dialog_success:
-
             main_window.upload_file(dialog.selectedFiles())
 
     @staticmethod

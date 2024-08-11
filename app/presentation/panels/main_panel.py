@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         self.selected_files = []
         self.stage_info_grid = StageInfoGrid()
         self.stage_management_grid = StageManagementGrid()
-        self.canvas = Canvas(draw_in_canvas=self.stage_management_grid.get_from_canvas_checkbox_state)
+        self.canvas: Canvas = Canvas(draw_in_canvas=self.stage_management_grid.get_from_canvas_checkbox_state)
         self.port_coms_grid = ComPortsGrid()
 
         self.buttons_list = []
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
 
             self.enable_buttons(True)
         self.show_notification(title="CALIBRATION",
-                               message="An error occured during calibration",
+                               message="An error occurred during calibration",
                                informative_text=calibration_result.STAGE_CALIBRATION_ERROR.value,
                                notification_variant=NotificationVariant.Error)
 
@@ -124,18 +124,19 @@ class MainWindow(QMainWindow):
                                    informative_text=message,
                                    notification_variant=NotificationVariant.Error)
 
-    def setup_button_actions(self,
-                             calibration: Callable[[int, int], ServiceError],
-                             laser_write: Callable[[List[List[Tuple[int, int]]], str, bool], None],
-                             prior_init: Callable[[str], ServiceError],
-                             laser_init: Callable[[str], ServiceError],
-                             stage_info: Callable[[], List]):
+    def setup_actions(self, calibration: Callable[[int, int], ServiceError],
+                      laser_write: Callable[[List[List[Tuple[int, int]]], str, bool], None],
+                      prior_init: Callable[[str], ServiceError],
+                      laser_init: Callable[[str], ServiceError],
+                      stage_info: Callable[[], List],
+                      draw_file_preview: Callable[[bool, str], None]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
             lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
         )
         self.stage_management_grid.button_start.clicked.connect(
-            lambda: laser_write(self.canvas.get_points, self.stage_management_grid.get_selected_file,
+            lambda: laser_write(self.canvas.get_points,
+                                self.stage_management_grid.get_selected_file,
                                 self.stage_management_grid.from_canvas_checkbox.isChecked())
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
@@ -145,6 +146,12 @@ class MainWindow(QMainWindow):
             lambda: self.handle_connection_laser()
         )
         self.stage_info_grid.start_timer(stage_info) # TODO think later about how to run it in different thread
+
+        self.stage_management_grid.from_canvas_checkbox.stateChanged.connect(
+            lambda: draw_file_preview(self.stage_management_grid.from_canvas_checkbox.isChecked(),
+                                      self.stage_management_grid.get_selected_file,
+                                      self.canvas)
+        )
 
     @staticmethod
     def show_notification(title: str = "SUCCESS",

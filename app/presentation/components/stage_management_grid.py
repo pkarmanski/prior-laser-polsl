@@ -11,10 +11,9 @@ class StageManagementGrid(BasicGrid):
         # buttons
         self.button_start = QPushButton('Start')
         self.button_calibration = QPushButton('Calibrate')
-        self.from_canvas_checkbox = QCheckBox('From Canvas')
+        self.from_canvas_checkbox: QCheckBox = QCheckBox('From Canvas')
         self.list_files = ImportFileView()
         self.init_grid()
-
     def init_grid(self):
 
         self.button_calibration.setObjectName("button-stage-management")
@@ -26,11 +25,10 @@ class StageManagementGrid(BasicGrid):
         self.frame_layout.addWidget(self.from_canvas_checkbox)
 
     @property
-    def get_selected_file(self):
-        try:
+    def get_selected_file(self) -> str:
+        if self.list_files.selectedItems():
             return self.list_files.selectedItems()[0].text()
-        except IndexError:
-            pass
+        return ""
 
     def upload_file(self, path: str):
         self.list_files.addItem(path)

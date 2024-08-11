@@ -1,6 +1,6 @@
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPen, QPainter
+from PyQt5.QtGui import QPen, QPainter, QBrush
 from PyQt5.QtWidgets import QMainWindow
 
 from app.presentation.components.canvas.basic_canvas import BasicCanvas
@@ -45,7 +45,6 @@ class Canvas(BasicCanvas):
     def mousePressEvent(self, event):
         if self.draw_in_canvas():
             self.__current_line = [(event.pos().x(), event.pos().y())]
-            print(self.__current_line)
         self.update()
 
     def mouseMoveEvent(self, event):
@@ -61,3 +60,15 @@ class Canvas(BasicCanvas):
 
     def update_figures(self, figures: list):
         self.__figures = figures
+
+    def clear_paint(self):
+        painter = QPainter(self)
+        painter.setBrush(QBrush(Qt.white))
+        painter.setPen(Qt.white)
+        painter.drawRect(self.rect())
+    def clear_canvas(self):
+        self.__lines.clear()
+        self.__current_line.clear()
+        self.__figures.clear()
+        self.clear_paint()
+        self.update()

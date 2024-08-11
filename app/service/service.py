@@ -5,6 +5,8 @@ and what to return to window when error happens
 import logging
 import math
 import time
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt
 from ezdxf.layouts import Modelspace
 from app.files_processing.file_reading import DXFReader
 from app.files_processing.enums import Figures
@@ -12,6 +14,7 @@ from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
 from app.laser.laser_dao import LaserDAO
 from app.models.service_models import StageStatus, ServiceAppParams
+from app.presentation.components.canvas.canvas import Canvas
 from app.stage.daos.prior_connector import PriorConnector
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
@@ -272,3 +275,49 @@ class Service:
         else:
             x, y = "NONE", "NONE"
         return [x, y, self.__stage_dao.get_running()]
+
+    def draw_file_preview(self, check_box_click: bool, selected_file: str, canvas: Canvas):
+        if selected_file == "":
+            return
+
+        canvas.clear_canvas()
+
+        if check_box_click:
+            return
+
+        self.__dxf_reader = DXFReader(selected_file)
+        dxf_file = self.__dxf_reader.read_dxf_file()
+        print(dxf_file)
+        if dxf_file:
+            return self.draw_on_canvas(dxf_file.modelspace(), canvas)
+
+    def draw_on_canvas(self, entities: Modelspace, canvas: Canvas):
+        painter = QPainter(canvas)
+        pen = QPen(Qt.black)
+        painter.setPen(pen)
+        for entity in entities:
+            coords, radius, entity_type = self.__dxf_reader.get_coordinates(entity)
+
+            if entity_type == Figures.LINE:
+                start, end = coords
+                painter.drawLine(start[0], start[1], end[0], end[1])
+
+            elif entity_type == Figures.ARC:
+                start_point, center, end_point = coords
+                rect = (
+                    center[0] - radius, center[1] - radius,
+                    radius * 2, radius * 2
+                )
+                start_angle = math.degrees(math.atan2(start_point[1] - center[1], start_point[0] - center[0]))
+                end_angle = math.degrees(math.atan2(end_point[1] - center[1], end_point[0] - center[0]))
+                span_angle = end_angle - start_angle
+                painter.drawArc(*rect, int(start_angle * 16), int(span_angle * 16))
+
+            elif entity_type == Figures.CIRCLE:
+                center = coords[0]
+                rect = (
+                    center[0] - radius, center[1] - radius,
+                    radius * 2, radius * 2
+                )
+                painter.drawEllipse(*rect)
+        painter.end()

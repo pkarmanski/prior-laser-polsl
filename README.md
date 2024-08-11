@@ -19,6 +19,9 @@ Printing -
 
 ### Changes
 
+pkarmanski - 11.08.2024 ver 1.0.19:
+- preapared methods for loading file preview on canvas (still working on it)
+
 bl4szk4 - 05.08.2024 ver 1.0.18
 - Code refactor
 - Added new panel
