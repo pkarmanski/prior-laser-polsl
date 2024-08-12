@@ -129,7 +129,7 @@ class MainWindow(QMainWindow):
                       prior_init: Callable[[str], ServiceError],
                       laser_init: Callable[[str], ServiceError],
                       stage_info: Callable[[], List],
-                      draw_file_preview: Callable[[bool, str], None]):
+                      draw_file_preview: Callable[[bool, str, Canvas], None]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
             lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
@@ -142,12 +142,12 @@ class MainWindow(QMainWindow):
         self.port_coms_grid.button_connect_stage.clicked.connect(
             lambda: self.handle_connection_prior(prior_init)
         )
-        self.port_coms_grid.button_connect_laser.clicked.connect(
-            lambda: self.handle_connection_laser()
-        )
+        # self.port_coms_grid.button_connect_laser.clicked.connect(
+        #     lambda: self.handle_connection_laser()
+        # )
         self.stage_info_grid.start_timer(stage_info) # TODO think later about how to run it in different thread
 
-        self.stage_management_grid.from_canvas_checkbox.stateChanged.connect(
+        self.port_coms_grid.button_connect_laser.clicked.connect(
             lambda: draw_file_preview(self.stage_management_grid.from_canvas_checkbox.isChecked(),
                                       self.stage_management_grid.get_selected_file,
                                       self.canvas)

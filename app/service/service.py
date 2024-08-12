@@ -19,6 +19,7 @@ from app.stage.daos.prior_connector import PriorConnector
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
 from app.stage_utils.yaml_manager import YamlData
+from app.presentation.services.canvas_drawing import CanvasDrawingService
 from typing import List, Tuple
 
 
@@ -286,38 +287,6 @@ class Service:
             return
 
         self.__dxf_reader = DXFReader(selected_file)
-        dxf_file = self.__dxf_reader.read_dxf_file()
-        print(dxf_file)
+        dxf_file = self.__dxf_reader.get_dxf_file()
         if dxf_file:
-            return self.draw_on_canvas(dxf_file.modelspace(), canvas)
-
-    def draw_on_canvas(self, entities: Modelspace, canvas: Canvas):
-        painter = QPainter(canvas)
-        pen = QPen(Qt.black)
-        painter.setPen(pen)
-        for entity in entities:
-            coords, radius, entity_type = self.__dxf_reader.get_coordinates(entity)
-
-            if entity_type == Figures.LINE:
-                start, end = coords
-                painter.drawLine(start[0], start[1], end[0], end[1])
-
-            elif entity_type == Figures.ARC:
-                start_point, center, end_point = coords
-                rect = (
-                    center[0] - radius, center[1] - radius,
-                    radius * 2, radius * 2
-                )
-                start_angle = math.degrees(math.atan2(start_point[1] - center[1], start_point[0] - center[0]))
-                end_angle = math.degrees(math.atan2(end_point[1] - center[1], end_point[0] - center[0]))
-                span_angle = end_angle - start_angle
-                painter.drawArc(*rect, int(start_angle * 16), int(span_angle * 16))
-
-            elif entity_type == Figures.CIRCLE:
-                center = coords[0]
-                rect = (
-                    center[0] - radius, center[1] - radius,
-                    radius * 2, radius * 2
-                )
-                painter.drawEllipse(*rect)
-        painter.end()
+            return CanvasDrawingService(canvas).draw(entities=self.__dxf_reader.get_figures())

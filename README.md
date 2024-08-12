@@ -18,6 +18,10 @@ Printing -
 
 
 ### Changes
+bl4szk4 - 12.08.2024
+- moved drawing to a separate service
+- WIP drawing a preview on canvas
+- small code fixes
 
 pkarmanski - 11.08.2024 ver 1.0.19:
 - preapared methods for loading file preview on canvas (still working on it)

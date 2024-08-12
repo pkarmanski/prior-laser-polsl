@@ -23,3 +23,8 @@ class WindowUtils:
         main_window.text = Additional_Windows_Text
         main_window.text.show()
 
+    @staticmethod
+    def convert_float_to_int_list(float_list: list[float]) -> list[int]:
+        converted = [int(x/100) for x in float_list]
+        return converted
+
