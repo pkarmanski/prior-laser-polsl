@@ -12,7 +12,7 @@ class CanvasDrawingService:
     def __init__(self, canvas: Canvas):
         self.canvas = canvas
 
-    def draw(self, entities):
+    def draw(self, entities, scale: int):
         painter = QPainter(self.canvas)
         pen = QPen(Qt.black, 2, Qt.SolidLine)
         painter.setPen(pen)
@@ -20,19 +20,23 @@ class CanvasDrawingService:
         for entity in entities:
             coords, radius, entity_type = entity
 
+            scaled_coords = [(x * scale, y * scale) for x, y in coords]
+
+            if radius is not None:
+                scaled_radius = radius * scale
+
             match entity_type:
                 case Figures.LINE:
-                    self.draw_line(painter, coords)
+                    self.draw_line(painter, scaled_coords)
 
                 case Figures.CIRCLE:
-                    self.draw_circle(painter, coords, radius)
+                    self.draw_circle(painter, scaled_coords, scaled_radius)
 
                 case Figures.ARC:
-                    self.draw_arc(painter, coords, radius)
+                    self.draw_arc(painter, scaled_coords, scaled_radius)
 
                 case _:
                     pass
-        painter.end()
         self.canvas.update()
 
     def draw_line(self, painter: QPainter, coords: list) -> None:

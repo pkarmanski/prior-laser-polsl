@@ -167,10 +167,9 @@ class Service:
             time.sleep(0.2)
 
     # TODO: proper laser switching and consider triggers
-    def print_lines(self, lines: List[List[Tuple[int, int]]], dxf_file_path: str, from_canvas: bool):
+    def print_lines(self, lines: List[List[Tuple[int, int]]], dxf_file_path: str, from_canvas: bool, scale: int):
         if from_canvas:
-            scaled_lines = [StageUtils.scale_list_points(line, self.__service_app_params.scale_x,
-                                                         self.__service_app_params.scale_y) for line in lines]
+            scaled_lines = [StageUtils.scale_list_points(line, scale, scale) for line in lines]
             for line in scaled_lines:
                 self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
                 while self.__stage_dao.get_running().data:
@@ -277,7 +276,7 @@ class Service:
             x, y = "NONE", "NONE"
         return [x, y, self.__stage_dao.get_running()]
 
-    def draw_file_preview(self, check_box_click: bool, selected_file: str, canvas: Canvas):
+    def draw_file_preview(self, check_box_click: bool, selected_file: str, canvas: Canvas, scale: int):
         if selected_file == "":
             return
 
@@ -289,4 +288,4 @@ class Service:
         self.__dxf_reader = DXFReader(selected_file)
         dxf_file = self.__dxf_reader.get_dxf_file()
         if dxf_file:
-            return CanvasDrawingService(canvas).draw(entities=self.__dxf_reader.get_figures())
+            return CanvasDrawingService(canvas).draw(entities=self.__dxf_reader.get_figures(), scale=scale)

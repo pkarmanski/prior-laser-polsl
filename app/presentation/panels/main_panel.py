@@ -1,6 +1,6 @@
 from typing import Callable, List, Tuple
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout, QSlider, QLabel
 from threading import Thread
 from app.enums.service_errors import ServiceError
 from app.presentation.components.canvas.canvas import Canvas
@@ -26,6 +26,8 @@ class MainWindow(QMainWindow):
         self.stage_info_grid = StageInfoGrid()
         self.stage_management_grid = StageManagementGrid()
         self.canvas: Canvas = Canvas(draw_in_canvas=self.stage_management_grid.get_from_canvas_checkbox_state)
+        self.print_scale_slider: QSlider = QSlider(Qt.Horizontal)
+        self.print_scale_slider_label: QLabel = QLabel("Scale 1")
         self.port_coms_grid = ComPortsGrid()
 
         self.buttons_list = []
@@ -46,8 +48,32 @@ class MainWindow(QMainWindow):
         stage_layout.addWidget(self.port_coms_grid)
         stage_layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
 
+
+        #TODO spiąć to w jedną klaskę od skali
+        self.print_scale_slider.setMinimum(1) #TODO może pobierać to z configa?
+        self.print_scale_slider.setMaximum(5)
+        self.print_scale_slider.setTickPosition(QSlider.TicksBelow)
+        self.print_scale_slider.setTickInterval(1)
+
+        self.print_scale_slider_label.setObjectName('scale-info-element')
+
+        canvas_layout = QVBoxLayout()
+        # scale_range_label_layout = QHBoxLayout()
+        # scale_range_label_layout.setObjectName("scale-info-element-number-layout")
+        # for i in range(1, 6):
+        #     scale_number_label = QLabel(str(i))
+        #     scale_number_label.setObjectName("scale-info-element-number")
+        #     scale_range_label_layout.addWidget(scale_number_label)
+        canvas_layout.addWidget(self.canvas)
+        canvas_layout.addWidget(self.print_scale_slider_label)
+        canvas_layout.addWidget(self.print_scale_slider)
+        # canvas_layout.addLayout(scale_range_label_layout)
+
+
+
+
         outer_layout.addLayout(stage_layout)
-        outer_layout.addWidget(self.canvas)
+        outer_layout.addLayout(canvas_layout)
         outer_layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
         widget.setLayout(outer_layout)
@@ -91,6 +117,10 @@ class MainWindow(QMainWindow):
                                informative_text=calibration_result.STAGE_CALIBRATION_ERROR.value,
                                notification_variant=NotificationVariant.Error)
 
+    def update_print_scale_label(self, value):
+        self.print_scale_slider_label.setText(f"Scale: {value}")
+
+
     # TODO: add laser Errors
     def handle_connection_laser(self, ):
         # self.progress_window.show()
@@ -126,11 +156,11 @@ class MainWindow(QMainWindow):
                                    notification_variant=NotificationVariant.Error)
 
     def setup_actions(self, calibration: Callable[[int, int], ServiceError],
-                      laser_write: Callable[[List[List[Tuple[int, int]]], str, bool], None],
+                      laser_write: Callable[[List[List[Tuple[int, int]]], str, bool, int], None],
                       prior_init: Callable[[str], ServiceError],
                       laser_init: Callable[[str], ServiceError],
                       stage_info: Callable[[], List],
-                      draw_file_preview: Callable[[bool, str, Canvas], None]):
+                      draw_file_preview: Callable[[bool, str, Canvas, int], None]):
 
         self.stage_management_grid.button_calibration.clicked.connect(
             lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
@@ -138,11 +168,26 @@ class MainWindow(QMainWindow):
         self.stage_management_grid.button_start.clicked.connect(
             lambda: laser_write(self.canvas.get_points,
                                 self.stage_management_grid.get_selected_file,
-                                self.stage_management_grid.from_canvas_checkbox.isChecked())
+                                self.stage_management_grid.from_canvas_checkbox.isChecked(),
+                                self.print_scale_slider.value())
         )
         self.port_coms_grid.button_connect_stage.clicked.connect(
             lambda: self.handle_connection_prior(prior_init)
         )
+
+        def on_slider_value_changed(value: int):
+            self.update_print_scale_label(value)
+            draw_file_preview(
+                self.stage_management_grid.from_canvas_checkbox.isChecked(),
+                self.stage_management_grid.get_selected_file,
+                self.canvas,
+                value
+            )
+
+        self.print_scale_slider.valueChanged.connect(on_slider_value_changed)
+
+
+
         # self.port_coms_grid.button_connect_laser.clicked.connect(
         #     lambda: self.handle_connection_laser()
         # )
@@ -151,7 +196,8 @@ class MainWindow(QMainWindow):
         self.port_coms_grid.button_connect_laser.clicked.connect(
             lambda: draw_file_preview(self.stage_management_grid.from_canvas_checkbox.isChecked(),
                                       self.stage_management_grid.get_selected_file,
-                                      self.canvas)
+                                      self.canvas,
+                                      self.print_scale_slider.value())
         )
 
         self.stage_management_grid.button_load_file.clicked.connect(lambda x: WindowUtils.open_file(self))

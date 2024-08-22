@@ -5,6 +5,25 @@ QLabel#stage-info-element{
     padding-bottom: 10px;
     border-spacing: 10px;
 }
+
+QLabel#scale-info-element{
+    padding-top: 10px;
+    font-size: 20px;
+    color: white;
+    border-spacing: 10px;
+}
+
+QLabel#scale-info-element-number{
+    font-size: 10px;
+    color: white;
+    border-spacing: 5px;
+}
+
+QHBoxLayout#scale-info-element-number-layout{
+    display: flex;
+    justify-content: space-between;
+}
+
 QFrame#basic-frame{
     background-color: #222a2d;
     max-width: 300px;

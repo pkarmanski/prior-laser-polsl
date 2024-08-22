@@ -18,6 +18,10 @@ Printing -
 
 
 ### Changes
+pkarmanski 22.08.2024:
+- added scaling int for now
+- added file upload button next to file list
+
 bl4szk4 - 12.08.2024
 - moved drawing to a separate service
 - WIP drawing a preview on canvas
