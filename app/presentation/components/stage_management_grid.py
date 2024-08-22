@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QPushButton, QLineEdit, QCheckBox
+from PyQt5.QtWidgets import QPushButton, QLineEdit, QCheckBox, QHBoxLayout
 
 from app.presentation.components.basic_grid import BasicGrid
 from app.presentation.components.import_file import ImportFileView
@@ -11,15 +11,19 @@ class StageManagementGrid(BasicGrid):
         # buttons
         self.button_start = QPushButton('Start')
         self.button_calibration = QPushButton('Calibrate')
+        self.button_load_file = QPushButton('File')
         self.from_canvas_checkbox: QCheckBox = QCheckBox('From Canvas')
         self.list_files = ImportFileView()
         self.init_grid()
     def init_grid(self):
+        load_file_layout = QHBoxLayout()
+        load_file_layout.addWidget(self.button_load_file)
+        load_file_layout.addWidget(self.list_files)
 
         self.button_calibration.setObjectName("button-stage-management")
-
         self.button_start.setObjectName("button-stage-management")
-        self.frame_layout.addWidget(self.list_files)
+        self.button_load_file.setObjectName("button-stage-management")
+        self.frame_layout.addLayout(load_file_layout)
         self.frame_layout.addWidget(self.button_calibration)
         self.frame_layout.addWidget(self.button_start)
         self.frame_layout.addWidget(self.from_canvas_checkbox)

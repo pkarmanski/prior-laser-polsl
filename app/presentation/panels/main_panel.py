@@ -13,6 +13,7 @@ from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
 from app.presentation.panels.processing_panel import ProcessingPanel
 from app.files_processing.file_reading import DXFReader
+from app.presentation.window_utils.window_utils import WindowUtils
 
 
 class MainWindow(QMainWindow):
@@ -152,6 +153,8 @@ class MainWindow(QMainWindow):
                                       self.stage_management_grid.get_selected_file,
                                       self.canvas)
         )
+
+        self.stage_management_grid.button_load_file.clicked.connect(lambda x: WindowUtils.open_file(self))
 
     @staticmethod
     def show_notification(title: str = "SUCCESS",
