@@ -99,15 +99,11 @@ class Canvas(BasicCanvas):
     def update_figures(self, figures: list):
         self.__figures = figures
 
-    def clear_paint(self):
-        painter = QPainter(self)
-        painter.setBrush(QBrush(Qt.white))
-        painter.setPen(Qt.white)
-        painter.drawRect(self.rect())
 
     def clear_canvas(self):
-        self.__lines.clear()
-        self.__current_line.clear()
-        self.__figures.clear()
-        self.clear_paint()
+        self.__lines = []
+        self.__current_line = []
+        self.__figures = []
+        self.lines_preview = []
+        self.circles_preview = []
         self.update()

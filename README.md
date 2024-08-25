@@ -18,6 +18,10 @@ Printing -
 
 
 ### Changes
+bl4szk4, pkarmanski 25.08.2024:
+- added new entities for drawing
+- changed how entities are reading from file
+
 pkarmanski 22.08.2024:
 - added scaling int for now
 - added file upload button next to file list

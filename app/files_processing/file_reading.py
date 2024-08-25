@@ -5,6 +5,11 @@ import math
 from typing import List, Tuple, Union
 from ezdxf.document import Drawing
 from app.files_processing.enums import Figures
+from app.files_processing.models import Entity
+from app.consts.presentation_consts import (
+    CANVAS_WIDTH,
+    CANVAS_HEIGHT,
+)
 
 
 class DXFReader:
@@ -31,15 +36,19 @@ class DXFReader:
         return figures
 
     @staticmethod
-    def get_coordinates(entity) -> Tuple[List, Union[int, list, None], Union[Figures, str]]:
+    def get_coordinates(entity) -> Entity:
+        # for entity in msp:
         entity_type = entity.dxftype()
+
         match entity_type:
             case Figures.LINE.value:
-                return [(entity.dxf.start.x, entity.dxf.start.y,),
-                        (entity.dxf.end.x, entity.dxf.end.y,)], None, Figures.LINE
+                return Entity(coords=[(entity.dxf.start.x, entity.dxf.start.y,), (entity.dxf.end.x, entity.dxf.end.y,)],
+                              entity_type=Figures.LINE)
 
             case Figures.CIRCLE.value:
-                return [(entity.dxf.center.x, entity.dxf.center.y,)], entity.dxf.radius, Figures.CIRCLE
+                return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y,)],
+                              radius=entity.dxf.radius,
+                              entity_type=Figures.CIRCLE)
 
             case Figures.ARC.value:
                 start_angle = entity.dxf.start_angle
@@ -55,26 +64,31 @@ class DXFReader:
                     center[0] + radius * math.cos(math.radians(end_angle)),
                     center[1] + radius * math.sin(math.radians(end_angle)),
                 )
-                return [start_point, center, end_point], radius, Figures.ARC
+                return Entity(coords=[start_point, center, end_point],
+                              radius=radius,
+                              entity_type=Figures.ARC)
 
             case Figures.POINT.value:
-                return [(entity.dxf.location.x, entity.dxf.location.y,)], None, Figures.POINT
+                return Entity(coords=[(entity.dxf.location.x, entity.dxf.location.y,)],
+                              entity_type=Figures.POINT)
 
             case Figures.ELLIPSE.value:
-                center = (entity.dxf.center.x, entity.dxf.center.y,)
                 major_axis = (entity.dxf.major_axis.x, entity.dxf.major_axis.y,)
                 ratio = entity.dxf.ratio
                 start_param = entity.dxf.start_param
                 end_param = entity.dxf.end_param
-                return [center], [major_axis, ratio, start_param, end_param], Figures.ELLIPSE
+                return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y,)],
+                              entity_type=Figures.ELLIPSE,
+                              params=(major_axis, ratio, start_param, end_param))
 
             case Figures.LWPOLYLINE.value:
-                points = [(v.dxf.location.x, v.dxf.location.y) for v in entity.vertices]
-                return points, None, Figures.LWPOLYLINE
+                return Entity(coords=[(v.dxf.location.x, v.dxf.location.y) for v in entity.vertices],
+                              entity_type=Figures.LWPOLYLINE)
 
             case Figures.POLYLINE.value:
                 spline_curve = entity.construction_tool()
                 points = list(spline_curve.flattening(0.01))
-                return [(p.x, p.y,) for p in points], None, Figures.SPLINE
+                return Entity(coords=[(p.x, p.y,) for p in points],
+                              entity_type=Figures.SPLINE)
             case _:
-                return [], None, Figures.NONE
+                return Entity(coords=[],  entity_type=Figures.NONE)

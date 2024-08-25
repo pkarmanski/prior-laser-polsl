@@ -280,10 +280,10 @@ class Service:
         if selected_file == "":
             return
 
-        canvas.clear_canvas()
-
         if check_box_click:
             return
+
+        canvas.clear_canvas()
 
         self.__dxf_reader = DXFReader(selected_file)
         dxf_file = self.__dxf_reader.get_dxf_file()

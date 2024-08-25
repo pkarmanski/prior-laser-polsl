@@ -1,6 +1,7 @@
 import math
+from typing import List
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPointF
 from PyQt5.QtGui import QPainter, QPen
 
 from app.files_processing.enums import Figures
@@ -16,9 +17,8 @@ class CanvasDrawingService:
         painter = QPainter(self.canvas)
         pen = QPen(Qt.black, 2, Qt.SolidLine)
         painter.setPen(pen)
-
         for entity in entities:
-            coords, radius, entity_type = entity
+            coords, radius, entity_type, params = entity.coords, entity.radius, entity.entity_type, entity.params
 
             scaled_coords = [(x * scale, y * scale) for x, y in coords]
 
