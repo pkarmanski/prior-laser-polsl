@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPen, QPainter, QBrush
 from PyQt5.QtWidgets import QMainWindow
 
 from app.presentation.components.canvas.basic_canvas import BasicCanvas
+from app.presentation.services.canvas_drawing import CanvasDrawingService
 from app.consts.presentation_consts import (
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
@@ -17,6 +18,7 @@ class Canvas(BasicCanvas):
         self.last_pos = None
         self.current_pos = None
 
+        self.__scale = 1
         self.__lines = []
         self.__current_line = []
         self.__figures = []
@@ -37,30 +39,9 @@ class Canvas(BasicCanvas):
             self.paint_from_canvas(painter)
         else:
             self.clearMask()
-            self.paint_not_from_canvas(painter)
-
-    def paint_not_from_canvas(self, painter: QPainter):
-        pen = QPen(Qt.black, 2, Qt.SolidLine)
-        painter.setPen(pen)
-
-        center_x = CANVAS_WIDTH // 2
-        center_y = CANVAS_HEIGHT // 2
-        for line in self.lines_preview:
-            x1, x2, y1, y2 = line
-
-            centered_line = (
-                x1 + center_x, y1 + center_y,
-                x2 + center_x, y2 + center_y
+            CanvasDrawingService().draw(
+                painter=painter, entities=self.__figures, scale=self.__scale
             )
-            painter.drawLine(*centered_line)
-        for circle in self.circles_preview:
-            x, y, width, height = circle
-            centered_circle = (
-                x + center_x - width // 2,
-                y + center_y - height // 2,
-                width, height
-            )
-            painter.drawEllipse(*centered_circle)
 
     def paint_from_canvas(self, painter: QPainter):
         pen = QPen(Qt.black, 2, Qt.SolidLine)
@@ -72,13 +53,6 @@ class Canvas(BasicCanvas):
             for point in range(len(line) - 1):
                 painter.drawLine(line[point][0], line[point][1],
                                  line[point + 1][0], line[point + 1][1])
-
-    def paint_start(self):
-        painter = QPainter(self)
-        pen = QPen(Qt.black, 2, Qt.SolidLine)
-        painter.setPen(pen)
-        painter.drawLine(0, 0, 200, 200)
-        self.update()
 
     def mousePressEvent(self, event):
         if self.draw_in_canvas():
@@ -107,3 +81,6 @@ class Canvas(BasicCanvas):
         self.lines_preview = []
         self.circles_preview = []
         self.update()
+
+    def update_scale(self, scale: int) -> None:
+        self.__scale = scale

@@ -36,6 +36,8 @@ class StageManagementGrid(BasicGrid):
 
     def upload_file(self, path: str):
         self.list_files.addItem(path)
+        last_index = self.list_files.count() - 1
+        self.list_files.setCurrentRow(last_index)
 
     def get_from_canvas_checkbox_state(self) -> bool:
         return self.from_canvas_checkbox.isChecked()

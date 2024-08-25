@@ -19,6 +19,7 @@ from app.stage.daos.prior_connector import PriorConnector
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
 from app.stage_utils.yaml_manager import YamlData
+from app.files_processing.models import Entity
 from app.presentation.services.canvas_drawing import CanvasDrawingService
 from typing import List, Tuple
 
@@ -201,9 +202,9 @@ class Service:
         else:
             if dxf_file_path:
                 self.__dxf_reader = DXFReader(dxf_file_path)
-                dxf_file = self.__dxf_reader.read_dxf_file()
+                dxf_file = self.__dxf_reader.get_figures()
                 if dxf_file:
-                    return self.draw(dxf_file.modelspace())
+                    return self.draw(dxf_file)
             return ServiceError.DXF_ERROR
 
     def draw_circles(self, radius: int, duration: int = 10, points: int = 200):
@@ -233,13 +234,15 @@ class Service:
 
         self.__stage_dao.stop_stage()
 
-    def draw(self, entities: Modelspace):
+    def draw(self, entities: list[Entity]):
         for entity in entities:
-            coords, radius, entity_type = self.__dxf_reader.get_coordinates(entity)
-            entity_type =Figures.CIRCLE
-            radius = 10000
-            start_point = (0, 0)#coords[0]
-            self.__stage_dao.goto_position(start_point[0], start_point[1], speed=10000)
+            coords = entity.coords
+            entity_type = entity.entity_type
+            radius = entity.radius
+            # entity_type =Figures.CIRCLE
+            # radius = 10000
+            start_point = coords[0]
+            # self.__stage_dao.goto_position(start_point[0], start_point[1], speed=10000)
             while self.__stage_dao.get_running().data:
                 time.sleep(0.2)
             # Setting start laser position
@@ -288,4 +291,5 @@ class Service:
         self.__dxf_reader = DXFReader(selected_file)
         dxf_file = self.__dxf_reader.get_dxf_file()
         if dxf_file:
-            return CanvasDrawingService(canvas).draw(entities=self.__dxf_reader.get_figures(), scale=scale)
+            canvas.update_scale(scale)
+            canvas.update_figures(figures=self.__dxf_reader.get_figures())
