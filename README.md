@@ -18,6 +18,11 @@ Printing -
 
 
 ### Changes
+bl4szk4 12.09.2024:
+- offset to drawn figures
+- added SPLINE to figures
+- fixes in figures presentation
+
 bl4szk4, pkarmanski 25.08.2024:
 - added new entities for drawing
 - changed how entities are reading from file

@@ -10,4 +10,12 @@ GRAY_COLOR = '#c8c8c8'
 SLIDER_MIN = 1
 SLIDER_MAX = 5
 
-PRESENTATION_OFFSET = 10
+PRESENTATION_OFFSET = 20
+
+SCALE_MAPPING = {
+    1: 1000,
+    2: 1,
+    3: .2,
+    4: 0.05,
+    5: .03,
+}

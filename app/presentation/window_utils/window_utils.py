@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QFileDialog
 
 from app.presentation.components.additional_windows import Additional_Windows_Text
-
+from app.files_processing.models import Entity
+from app.files_processing.enums import Figures
 
 
 class WindowUtils:
@@ -25,6 +26,37 @@ class WindowUtils:
 
     @staticmethod
     def convert_float_to_int_list(float_list: list[float]) -> list[int]:
-        converted = [int(x/100) for x in float_list]
+        converted = [int(x) for x in float_list]
         return converted
 
+    @staticmethod
+    def convert_list_of_list_float_to_int(float_list: list[tuple[float]]) -> list[tuple[int, int]]:
+        converted = [(int(x), int(y)) for x, y in float_list]
+        return converted
+
+    @staticmethod
+    def get_offset(entities: list[Entity]) -> tuple[int, int]:
+        min_x = entities[0].coords[0][0]
+        min_y = entities[0].coords[0][1]
+        print(f"{min_x} --- {min_y}")
+        for entity in entities:
+            coords = entity.coords
+            if entity.entity_type == Figures.SPLINE:
+                for coord in coords:
+                    x = coord[0]
+                    y = coord[1]
+                    y = -y
+                    if x < min_x:
+                        min_x = x
+                    if y < min_y:
+                        min_y = y
+                continue
+
+            for x, y in coords:
+                y = -y
+                if x < min_x:
+                    min_x = x
+                if y < min_y:
+                    min_y = y
+
+        return min_x, min_y

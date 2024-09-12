@@ -35,7 +35,6 @@ class MainWindow(QMainWindow):
         self.close_event = close_event
         self.progress_window = ProcessingPanel()
 
-
     def customize_init(self):
         self.canvas.setAttribute(Qt.WA_StyledBackground, True)
 

@@ -34,6 +34,7 @@ class ImportFileView(QListWidget):
                 else:
                     links.append(str(url.toString()))
             self.addItems(links)
+            self.setCurrentRow(0)
         else:
             event.ignore()
 

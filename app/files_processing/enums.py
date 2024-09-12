@@ -9,4 +9,5 @@ class Figures(Enum):
     ELLIPSE = 'ELLIPSE'
     LWPOLYLINE = 'LWPOLYLINE'
     POLYLINE = 'POLYLINE'
+    SPLINE = 'SPLINE'
     NONE = 'NONE'

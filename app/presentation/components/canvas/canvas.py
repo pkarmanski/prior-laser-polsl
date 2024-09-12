@@ -1,14 +1,9 @@
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPen, QPainter, QBrush
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtGui import QPen, QPainter
 
 from app.presentation.components.canvas.basic_canvas import BasicCanvas
 from app.presentation.services.canvas_drawing import CanvasDrawingService
-from app.consts.presentation_consts import (
-    CANVAS_WIDTH,
-    CANVAS_HEIGHT,
-)
 
 
 class Canvas(BasicCanvas):
@@ -72,7 +67,6 @@ class Canvas(BasicCanvas):
 
     def update_figures(self, figures: list):
         self.__figures = figures
-
 
     def clear_canvas(self):
         self.__lines = []

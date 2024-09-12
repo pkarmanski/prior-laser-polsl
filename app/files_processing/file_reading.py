@@ -10,6 +10,7 @@ from app.consts.presentation_consts import (
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
 )
+import numpy as np
 
 
 class DXFReader:
@@ -42,31 +43,25 @@ class DXFReader:
 
         match entity_type:
             case Figures.LINE.value:
+                # print([(entity.dxf.start.x, entity.dxf.start.y,), (entity.dxf.end.x, entity.dxf.end.y,)])
                 return Entity(coords=[(entity.dxf.start.x, entity.dxf.start.y,), (entity.dxf.end.x, entity.dxf.end.y,)],
                               entity_type=Figures.LINE)
 
             case Figures.CIRCLE.value:
-                return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y,)],
+                return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y + 2 * entity.dxf.radius,)],
                               radius=entity.dxf.radius,
                               entity_type=Figures.CIRCLE)
 
             case Figures.ARC.value:
+                center = entity.dxf.center
+                radius = entity.dxf.radius
                 start_angle = entity.dxf.start_angle
                 end_angle = entity.dxf.end_angle
-                center = (entity.dxf.center.x, entity.dxf.center.y,)
-                radius = entity.dxf.radius
 
-                start_point = (
-                    center[0] + radius * math.cos(math.radians(start_angle)),
-                    center[1] + radius * math.sin(math.radians(start_angle)),
-                )
-                end_point = (
-                    center[0] + radius * math.cos(math.radians(end_angle)),
-                    center[1] + radius * math.sin(math.radians(end_angle)),
-                )
-                return Entity(coords=[start_point, center, end_point],
+                return Entity(coords=[(center.x - radius, center.y + radius)],
                               radius=radius,
-                              entity_type=Figures.ARC)
+                              entity_type=Figures.ARC,
+                              params=(start_angle, end_angle))
 
             case Figures.POINT.value:
                 return Entity(coords=[(entity.dxf.location.x, entity.dxf.location.y,)],
@@ -75,20 +70,30 @@ class DXFReader:
             case Figures.ELLIPSE.value:
                 major_axis = (entity.dxf.major_axis.x, entity.dxf.major_axis.y,)
                 ratio = entity.dxf.ratio
-                start_param = entity.dxf.start_param
-                end_param = entity.dxf.end_param
-                return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y,)],
-                              entity_type=Figures.ELLIPSE,
-                              params=(major_axis, ratio, start_param, end_param))
 
-            case Figures.LWPOLYLINE.value:
-                return Entity(coords=[(v.dxf.location.x, v.dxf.location.y) for v in entity.vertices],
-                              entity_type=Figures.LWPOLYLINE)
+                major_len = (math.sqrt((major_axis[0] ** 2 + major_axis[1] ** 2)))
+                minor_len = major_len * ratio
+                print(f"{entity.dxf.center.x=}")
+                return Entity(coords=[(entity.dxf.center.x - (major_len / 2), entity.dxf.center.y - (minor_len / 2),)],
+                              entity_type=Figures.ELLIPSE,
+                              params=(major_len, minor_len))
 
             case Figures.POLYLINE.value:
-                spline_curve = entity.construction_tool()
-                points = list(spline_curve.flattening(0.01))
-                return Entity(coords=[(p.x, p.y,) for p in points],
-                              entity_type=Figures.SPLINE)
+                return Entity(coords=[(v.dxf.location.x, v.dxf.location.y) for v in entity.vertices],
+                              entity_type=Figures.POLYLINE)
+
+            case Figures.LWPOLYLINE.value:
+                point, start_width, end_width, bulge = entity
+                print(f"{point=}, {start_width=}, {end_width=}, {bulge=}")
+                # spline_curve = entity.construction_tool()
+                # points = list(spline_curve.flattening(0.01))
+                # return Entity(coords=[(p.x, p.y,) for p in points],
+                #               entity_type=Figures.LWPOLYLINE)
+            case Figures.SPLINE.value:
+                control_points = np.array(entity.control_points)
+                control_points = control_points[:, :2]
+
+                return Entity(coords=control_points, entity_type=Figures.SPLINE)
             case _:
+                print(entity_type)
                 return Entity(coords=[],  entity_type=Figures.NONE)

@@ -4,6 +4,7 @@ from app.presentation.components.basic_grid import BasicGrid
 from app.presentation.components.import_file import ImportFileView
 from typing import List
 
+
 class StageManagementGrid(BasicGrid):
     def __init__(self):
         super().__init__()
@@ -15,6 +16,7 @@ class StageManagementGrid(BasicGrid):
         self.from_canvas_checkbox: QCheckBox = QCheckBox('From Canvas')
         self.list_files = ImportFileView()
         self.init_grid()
+
     def init_grid(self):
         load_file_layout = QHBoxLayout()
         load_file_layout.addWidget(self.button_load_file)
