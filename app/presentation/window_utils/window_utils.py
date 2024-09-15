@@ -57,15 +57,9 @@ class WindowUtils:
             elif entity.entity_type == Figures.ELLIPSE:
                 x, y = coords[0]
 
-                x *= math.cos(math.radians(entity.angle))
-                y *= math.cos(math.radians(entity.angle))
                 # TODO: consider rotation of ellipse here (corner not axis)
-                # x -= entity.params[0] * math.cos(math.radians(entity.angle))
-                # y += entity.params[1] * math.acos(math.radians(90 - entity.angle))
-                # if entity.angle:
-                #     y += entity.params[0] * math.sin(math.radians(entity.angle))
-                # else:
-                #     y += entity.params[1]
+                x -= entity.params[0] * math.cos(math.radians(entity.angle))
+                y += math.sqrt(entity.params[0] ** 2 + entity.params[1] ** 2) * math.sin(math.radians(entity.angle))
 
                 y *= -1
                 if x < min_x:
