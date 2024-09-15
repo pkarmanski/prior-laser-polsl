@@ -39,7 +39,7 @@ class CanvasDrawingService:
                     cls.draw_arc(painter, scaled_coords, radius, params)
 
                 case Figures.ELLIPSE:
-                    cls.draw_ellipse(painter, scaled_coords, params, scaling_factor)
+                    cls.draw_ellipse(painter, scaled_coords, params, entity.angle, scaling_factor)
 
                 case Figures.POLYLINE:
                     cls.draw_polyline(painter, scaled_coords)
@@ -113,6 +113,7 @@ class CanvasDrawingService:
         transform.rotate(angle)
         painter.setTransform(transform)
         painter.drawEllipse(top_left, size[0], size[1])
+        painter.resetTransform()
 
     @staticmethod
     def draw_lwpolyline(painter: QPainter, coords: list) -> None:

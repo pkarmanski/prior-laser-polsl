@@ -10,4 +10,5 @@ class Entity(BaseModel):
     radius: float = None
     entity_type: Figures
     params: Any = None
+    angle: float = None
 

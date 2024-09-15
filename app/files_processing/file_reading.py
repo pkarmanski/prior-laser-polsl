@@ -78,7 +78,8 @@ class DXFReader:
 
                 return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y)],
                               entity_type=Figures.ELLIPSE,
-                              params=(major_len, minor_len))
+                              params=(major_len, minor_len),
+                              angle=angle)
 
             case Figures.POLYLINE.value:
                 return Entity(coords=[(v.dxf.location.x, v.dxf.location.y) for v in entity.vertices],
