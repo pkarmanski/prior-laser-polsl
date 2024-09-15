@@ -48,7 +48,7 @@ class DXFReader:
                               entity_type=Figures.LINE)
 
             case Figures.CIRCLE.value:
-                return Entity(coords=[(entity.dxf.center.x, entity.dxf.center.y + 2 * entity.dxf.radius,)],
+                return Entity(coords=[(entity.dxf.center.x - entity.dxf.radius, entity.dxf.center.y + entity.dxf.radius,)],
                               radius=entity.dxf.radius,
                               entity_type=Figures.CIRCLE)
 
@@ -73,8 +73,7 @@ class DXFReader:
 
                 major_len = (math.sqrt((major_axis[0] ** 2 + major_axis[1] ** 2)))
                 minor_len = major_len * ratio
-                print(f"{entity.dxf.center.x=}")
-                return Entity(coords=[(entity.dxf.center.x - (major_len / 2), entity.dxf.center.y - (minor_len / 2),)],
+                return Entity(coords=[(entity.dxf.center.x - major_len / 2, entity.dxf.center.y + (minor_len / 2),)],
                               entity_type=Figures.ELLIPSE,
                               params=(major_len, minor_len))
 
