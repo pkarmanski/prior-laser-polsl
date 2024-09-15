@@ -1,3 +1,5 @@
+import math
+
 from PyQt5.QtWidgets import QFileDialog
 
 from app.presentation.components.additional_windows import Additional_Windows_Text
@@ -50,6 +52,26 @@ class WindowUtils:
                         min_x = x
                     if y < min_y:
                         min_y = y
+                continue
+
+            elif entity.entity_type == Figures.ELLIPSE:
+                x, y = coords[0]
+
+                x *= math.cos(math.radians(entity.angle))
+                y *= math.cos(math.radians(entity.angle))
+                # TODO: consider rotation of ellipse here (corner not axis)
+                # x -= entity.params[0] * math.cos(math.radians(entity.angle))
+                # y += entity.params[1] * math.acos(math.radians(90 - entity.angle))
+                # if entity.angle:
+                #     y += entity.params[0] * math.sin(math.radians(entity.angle))
+                # else:
+                #     y += entity.params[1]
+
+                y *= -1
+                if x < min_x:
+                    min_x = x
+                if y < min_y:
+                    min_y = y
                 continue
 
             for x, y in coords:

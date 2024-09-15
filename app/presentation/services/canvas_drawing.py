@@ -2,7 +2,7 @@ import math
 from typing import List
 
 from PyQt5.QtCore import Qt, QPoint, QRect, QPointF
-from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtGui import QPainter, QPen, QTransform
 
 from app.files_processing.enums import Figures
 from app.files_processing.models import Entity
@@ -102,14 +102,16 @@ class CanvasDrawingService:
         painter.drawPoint(x, y)
 
     @staticmethod
-    def draw_ellipse(painter: QPainter, coords: list, params, scale: float) -> None:
+    def draw_ellipse(painter: QPainter, coords: list, params, angle: float, scale: float) -> None:
         coords = WindowUtils.convert_float_to_int_list(coords[0])
         x, y = coords
         major_len, minor_len = params
 
         size = (major_len / scale, minor_len / scale)
-        top_left = QPoint(x + int(size[0]), y)
-
+        top_left = QPoint(x, y)
+        transform = QTransform()
+        transform.rotate(angle)
+        painter.setTransform(transform)
         painter.drawEllipse(top_left, size[0], size[1])
 
     @staticmethod
