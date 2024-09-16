@@ -7,7 +7,8 @@ from PyQt5.QtGui import QPainter, QPen, QTransform
 from app.files_processing.enums import Figures
 from app.files_processing.models import Entity
 from app.presentation.window_utils.window_utils import WindowUtils
-from app.consts.presentation_consts import PRESENTATION_OFFSET, SCALE_MAPPING
+from app.consts.presentation_consts import SCALE_MAPPING
+from app.presentation.services.figures_transition import FiguresTransitionService
 
 
 class CanvasDrawingService:
@@ -16,9 +17,11 @@ class CanvasDrawingService:
         pen = QPen(Qt.black, 2, Qt.SolidLine)
         painter.setPen(pen)
         scaling_factor = SCALE_MAPPING[scale]
-        x_offset, y_offset = 0, 0
-        if entities:
-            x_offset, y_offset = WindowUtils.get_offset(entities)
+        transition_service = FiguresTransitionService(scaling_factor)
+        if not entities:
+            return
+
+        entities = transition_service.apply_offset(entities)
 
         for entity in entities:
             coords, radius, entity_type, params = entity.coords, entity.radius, entity.entity_type, entity.params
@@ -30,25 +33,25 @@ class CanvasDrawingService:
                 radius = radius / scaling_factor
             match entity_type:
                 case Figures.LINE:
-                    cls.draw_line(painter, scaled_coords)
+                    cls.draw_line(painter, coords)
 
                 case Figures.CIRCLE:
-                    cls.draw_circle(painter, scaled_coords, radius)
+                    cls.draw_circle(painter, coords, radius)
 
                 case Figures.ARC:
-                    cls.draw_arc(painter, scaled_coords, radius, params)
+                    cls.draw_arc(painter, coords, radius, params)
 
                 case Figures.ELLIPSE:
-                    cls.draw_ellipse(painter, scaled_coords, params, entity.angle, scaling_factor)
+                    cls.draw_ellipse(painter, coords, params, entity.angle)
 
                 case Figures.POLYLINE:
-                    cls.draw_polyline(painter, scaled_coords)
+                    cls.draw_polyline(painter, coords)
 
                 case Figures.LWPOLYLINE:
-                    cls.draw_lwpolyline(painter, scaled_coords)
+                    cls.draw_lwpolyline(painter, coords)
 
                 case Figures.SPLINE:
-                    cls.draw_spline(painter, scaled_coords)
+                    cls.draw_spline(painter, coords)
 
                 case _:
                     pass
@@ -106,8 +109,6 @@ class CanvasDrawingService:
         coords = WindowUtils.convert_float_to_int_list(coords[0])
         x, y = coords
         major_len, minor_len = params
-
-        size = (major_len / scale, minor_len / scale)
         top_left = QPoint(x, y)
         transform = QTransform()
         transform.rotate(angle)
