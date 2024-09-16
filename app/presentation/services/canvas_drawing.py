@@ -25,12 +25,7 @@ class CanvasDrawingService:
 
         for entity in entities:
             coords, radius, entity_type, params = entity.coords, entity.radius, entity.entity_type, entity.params
-            scaled_coords = [((x / scaling_factor) + PRESENTATION_OFFSET - (x_offset / scaling_factor),
-                              (-y / scaling_factor) + PRESENTATION_OFFSET - (y_offset / scaling_factor))
-                             for x, y in coords]
 
-            if radius is not None:
-                radius = radius / scaling_factor
             match entity_type:
                 case Figures.LINE:
                     cls.draw_line(painter, coords)
@@ -105,15 +100,17 @@ class CanvasDrawingService:
         painter.drawPoint(x, y)
 
     @staticmethod
-    def draw_ellipse(painter: QPainter, coords: list, params, angle: float, scale: float) -> None:
+    def draw_ellipse(painter: QPainter, coords: list, params, angle: float) -> None:
         coords = WindowUtils.convert_float_to_int_list(coords[0])
         x, y = coords
         major_len, minor_len = params
         top_left = QPoint(x, y)
         transform = QTransform()
+        transform.translate(top_left.x(), top_left.y())
         transform.rotate(angle)
+        transform.translate(-top_left.x(), -top_left.y())
         painter.setTransform(transform)
-        painter.drawEllipse(top_left, size[0], size[1])
+        painter.drawEllipse(top_left, major_len, minor_len)
         painter.resetTransform()
 
     @staticmethod
