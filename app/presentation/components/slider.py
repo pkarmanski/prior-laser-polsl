@@ -7,7 +7,6 @@ class Slider(QVBoxLayout):
     def __init__(self):
         super().__init__()
         self.print_scale_slider: QSlider = QSlider(Qt.Horizontal)
-        self.print_scale_slider_label: QLabel = QLabel("Scale 1")
 
         self.config()
 
@@ -16,6 +15,4 @@ class Slider(QVBoxLayout):
         self.print_scale_slider.setMaximum(SLIDER_MAX)
         self.print_scale_slider.setTickPosition(QSlider.TicksBelow)
         self.print_scale_slider.setTickInterval(SLIDER_TIC)
-        self.print_scale_slider_label.setObjectName('scale-info-element')
-        self.addWidget(self.print_scale_slider_label)
         self.addWidget(self.print_scale_slider)

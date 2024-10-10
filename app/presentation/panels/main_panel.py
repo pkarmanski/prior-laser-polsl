@@ -96,9 +96,6 @@ class MainWindow(QMainWindow):
                                informative_text=calibration_result.STAGE_CALIBRATION_ERROR.value,
                                notification_variant=NotificationVariant.Error)
 
-    def update_print_scale_label(self, value):
-        self.slider.print_scale_slider_label.setText(f"Scale: {value}")
-
     def handle_connection_laser(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_laser_com)
         if response == ServiceError.OK:
@@ -149,7 +146,6 @@ class MainWindow(QMainWindow):
         )
 
         def on_slider_value_changed(value: int):
-            self.update_print_scale_label(value)
             draw_file_preview(
                 self.stage_management_grid.from_canvas_checkbox.isChecked(),
                 self.stage_management_grid.get_selected_file,

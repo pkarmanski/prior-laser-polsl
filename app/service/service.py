@@ -30,7 +30,7 @@ class Service:
         self.__prior_connector = PriorConnector(self.__yaml.get_stage_ddl_path(), 1000)
         self.__stage_dao = StageDAO(self.__prior_connector)
         self.__laser_dao = LaserDAO(self.__prior_connector)
-        self.__dxf_reader = None
+        self.__dxf_reader: DXFReader = None
         self.__running_thread = None
         self.__laser_connector = None
         self.__service_app_params = None
