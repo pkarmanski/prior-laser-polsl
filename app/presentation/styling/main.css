@@ -116,6 +116,7 @@ QWidget#widget-canvas{
 }
 QLabel#label-information{
     font-size: 16px;
+    min-height: 20px;
     color: white;
     padding-bottom: 10px;
 }
