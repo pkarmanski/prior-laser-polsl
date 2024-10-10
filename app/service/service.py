@@ -239,13 +239,11 @@ class Service:
             coords = entity.coords
             entity_type = entity.entity_type
             radius = entity.radius
-            # entity_type =Figures.CIRCLE
-            # radius = 10000
+
             start_point = coords[0]
-            # self.__stage_dao.goto_position(start_point[0], start_point[1], speed=10000)
             while self.__stage_dao.get_running().data:
                 time.sleep(0.2)
-            # Setting start laser position
+
             self.__laser_dao.turn_laser(True)
 
             if entity_type == Figures.LINE:
@@ -261,7 +259,6 @@ class Service:
             elif entity_type == Figures.CIRCLE:
                 self.draw_circles(radius=radius, duration=10)
             elif entity_type == Figures.NONE:
-                # TODO
                 pass
             while self.__stage_dao.get_running().data:
                 time.sleep(0.2)

@@ -99,24 +99,20 @@ class MainWindow(QMainWindow):
     def update_print_scale_label(self, value):
         self.slider.print_scale_slider_label.setText(f"Scale: {value}")
 
-    def handle_connection_laser(self, ):
-        # self.progress_window.show()
-        dxf = DXFReader(self.stage_management_grid.get_selected_file)
-        figures = dxf.get_figures()
-        self.canvas.update_figures(figures)
-        # response = connect(self.port_coms_grid.get_laser_com)
-        # if response == ServiceError.OK:
-        #     self.connected_items['laser'] = True
-        #     if self.connected_items['prior']:
-        #         self.enable_buttons(True)
-        #     self.show_notification(message="Successfully connected to the laser",
-        #                            notification_variant=NotificationVariant.Success)
-        # else:
-        #     message = response.description
-        #     self.show_notification(title="ERROR",
-        #                            message="Unable to connect to the laser",
-        #                            informative_text=message,
-        #                            notification_variant=NotificationVariant.Error)
+    def handle_connection_laser(self, connect: Callable[[str], ServiceError]):
+        response = connect(self.port_coms_grid.get_laser_com)
+        if response == ServiceError.OK:
+            self.connected_items['laser'] = True
+            if self.connected_items['prior']:
+                self.enable_buttons(True)
+            self.show_notification(message="Successfully connected to the laser",
+                                   notification_variant=NotificationVariant.Success)
+        else:
+            message = response.description
+            self.show_notification(title="ERROR",
+                                   message="Unable to connect to the laser",
+                                   informative_text=message,
+                                   notification_variant=NotificationVariant.Error)
 
     def handle_connection_prior(self, connect: Callable[[str], ServiceError]):
         response = connect(self.port_coms_grid.get_stage_com)
@@ -163,16 +159,13 @@ class MainWindow(QMainWindow):
 
         self.slider.print_scale_slider.valueChanged.connect(on_slider_value_changed)
 
-        # self.port_coms_grid.button_connect_laser.clicked.connect(
-        #     lambda: self.handle_connection_laser()
-        # )
-        self.stage_info_grid.start_timer(stage_info) # TODO think later about how to run it in different thread
+        self.stage_info_grid.start_timer(stage_info)
 
+        self.port_coms_grid.button_connect_stage.clicked.connect(
+            lambda: self.handle_connection_prior(prior_init)
+        )
         self.port_coms_grid.button_connect_laser.clicked.connect(
-            lambda: draw_file_preview(self.stage_management_grid.from_canvas_checkbox.isChecked(),
-                                      self.stage_management_grid.get_selected_file,
-                                      self.canvas,
-                                      self.slider.print_scale_slider.value())
+            lambda: self.handle_connection_laser(laser_init)
         )
 
         self.stage_management_grid.button_load_file.clicked.connect(lambda x: WindowUtils.open_file(self))
