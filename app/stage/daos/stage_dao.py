@@ -1,9 +1,5 @@
-"""
-Class for directly accessing stage
-"""
-
 import logging
-from typing import Any, List
+from typing import List
 from threading import Lock
 from app.enums.service_errors import ServiceError
 from app.stage.daos.prior_connector import PriorConnector

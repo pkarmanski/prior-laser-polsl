@@ -8,14 +8,6 @@ from app.stage.factories.commands_factory import CommandsFactory
 
 
 class PriorConnector:
-    """
-    Attributes:
-        :arg __read_buffer: buffer for communication with stage
-        :arg __com_port: com port in computer to communicate with stage
-        :arg __SDKPrior: instance of stage
-        :arg __session_id: stores session id of current session
-    """
-
     def __init__(self, path: str, reading_buffer_size: int):
         self.__logger = logging.getLogger(__name__)
         self.__stage_dll_path = path

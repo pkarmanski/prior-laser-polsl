@@ -11,7 +11,7 @@ class WindowUtils:
     def open_file(main_window):
         dialog = QFileDialog()
         dialog.setFileMode(QFileDialog.FileMode.AnyFile)
-        dialog.setNameFilter("CAD (*.DWG *.DWF *.DXF")
+        dialog.setNameFilter("*.DXF")
         dialog_success = dialog.exec()
         if dialog_success:
             main_window.upload_file(dialog.selectedFiles())
@@ -30,7 +30,6 @@ class WindowUtils:
     def get_offset(entities: list[Entity]) -> tuple[int, int]:
         min_x = entities[0].coords[0][0]
         min_y = entities[0].coords[0][1]
-        # print(f"{min_x} --- {min_y}")
         for entity in entities:
             coords = entity.coords
             if entity.entity_type == Figures.SPLINE:
@@ -63,15 +62,6 @@ class WindowUtils:
                     if min_y > y:
                         min_y = y
                 continue
-                # x -= entity.params[0] * math.cos(math.radians(entity.angle))
-                # y += math.sqrt(entity.params[0] ** 2 + entity.params[1] ** 2) * math.sin(math.radians(entity.angle))
-                #
-                # y *= -1
-                # if x < min_x:
-                #     min_x = x
-                # if y < min_y:
-                #     min_y = y
-                # continue
 
             for x, y in coords:
                 y = -y
@@ -79,5 +69,4 @@ class WindowUtils:
                     min_x = x
                 if y < min_y:
                     min_y = y
-        print(f"{min_x} --- {min_y}")
         return min_x, min_y

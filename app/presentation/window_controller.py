@@ -1,8 +1,3 @@
-"""
-Purpose of this class to communicate between service and main_panel which supposed to have
-all visible components for render.
-This class should not be communicating directly with stage.
-"""
 import sys
 from typing import Union
 

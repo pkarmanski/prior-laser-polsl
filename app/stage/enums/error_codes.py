@@ -2,9 +2,6 @@ from enum import Enum
 
 
 class StageErrorCodes(Enum):
-    """
-    * @ brief SDK ERROR CODES returned directly by the SDk
-    """
     PRIOR_OK						= 0
     PRIOR_UNRECOGNISED_COMMAND		=-10001
     PRIOR_FAILEDTOOPENPORT			=-10002
@@ -23,9 +20,6 @@ class StageErrorCodes(Enum):
     PRIOR_SDK_INVALID_SESSION		=-10300
     PRIOR_SDK_NOMORE_SESSIONS		=-10301
 
-    """
-    * @brief  CONTROLLER ERROR codes returned by the stage controller being used. 
-     """
     PRIOR_NO_STAGE				=1
     PRIOR_NOT_IDLE				=2
     PRIOR_NO_DRIVE				=3

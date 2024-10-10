@@ -1,13 +1,8 @@
-"""
-This class will talk with repositories and will have logic for error handling
-and what to return to window when error happens
-"""
 import logging
 import math
 import time
-from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtCore import Qt
-from ezdxf.layouts import Modelspace
+
+from app.consts.stage_const import VELOCITY, BUFFER_SIZE
 from app.files_processing.file_reading import DXFReader
 from app.files_processing.enums import Figures
 from app.enums.service_errors import ServiceError
@@ -25,10 +20,10 @@ from typing import List, Tuple
 class Service:
     def __init__(self):
         self.__yaml = YamlData()
-        self.__prior_connector = PriorConnector(self.__yaml.get_stage_ddl_path(), 1000)
+        self.__prior_connector = PriorConnector(self.__yaml.get_stage_ddl_path(), BUFFER_SIZE)
         self.__stage_dao = StageDAO(self.__prior_connector)
         self.__laser_dao = LaserDAO(self.__prior_connector)
-        self.__dxf_reader: DXFReader = None
+        self.__dxf_reader: DXFReader
         self.__running_thread = None
         self.__laser_connector = None
         self.__service_app_params = None
@@ -83,7 +78,7 @@ class Service:
                                                      scale_y=stage_height / canvas_height)
 
     def calibrate(self, canvas_width: int, canvas_height: int) -> ServiceError:
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(-10000, -10000)
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(-VELOCITY, -VELOCITY)
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -104,7 +99,7 @@ class Service:
         self.__stage_dao.set_position(0, 0)
 
         # checking width and height
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(10000, 10000)
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(VELOCITY, VELOCITY)
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -139,26 +134,12 @@ class Service:
             positions = positions.split("\n")
             positions = [[int(coordinate) for coordinate in position.split(',')] for position in positions[1:]]
             for x, y in positions:
-                self.__stage_dao.goto_position(x, y, speed=10000)
+                self.__stage_dao.goto_position(x, y, speed=VELOCITY)
                 time.sleep(0.2)
         return_stopped = self.__stage_dao.stop_stage()
         if return_stopped.error == ServiceError.OK:
-            self.__logger.info("***********************GIT")
-
-    def check_position(self):
-        spectrum = (x for x in range(200))
-        for _ in spectrum:
-            is_running_response = self.__stage_dao.get_running()
-            if is_running_response.data is None:
-                break
-            elif is_running_response.data == 0:
-                time.sleep(0.2)
-                continue
-            else:
-                positions_response = self.__stage_dao.get_position()
-            if positions_response.error == ServiceError.OK:
-                self.__logger.info(positions_response.data)
-            time.sleep(0.2)
+            self.__logger.info("DONE")
+            self.__logger.info("***********************")
 
     def print_lines(
             self, lines: List[List[Tuple[int, int]]], dxf_figures: List[Entity], from_canvas: bool, scale: int
@@ -166,7 +147,7 @@ class Service:
         if from_canvas:
             scaled_lines = [StageUtils.scale_list_points(line, scale, scale) for line in lines]
             for line in scaled_lines:
-                self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
+                self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=VELOCITY)
                 while self.__stage_dao.get_running().data:
                     time.sleep(0.2)
                 # Setting start laser position
@@ -176,7 +157,7 @@ class Service:
                 error_counter = 0
                 while line:
                     x, y = line[position]
-                    response = self.__stage_dao.goto_position(x, y, speed=10000)
+                    response = self.__stage_dao.goto_position(x, y, speed=VELOCITY)
                     if response.data == "0":
                         position -= 1
                         line.pop()
@@ -237,7 +218,7 @@ class Service:
 
             if entity_type == Figures.LINE:
                 end_point = coords[1]
-                self.__stage_dao.goto_position(end_point[0], end_point[1], speed=10000)
+                self.__stage_dao.goto_position(end_point[0], end_point[1], speed=VELOCITY)
 
             elif entity_type == Figures.ARC:
                 center_point = coords[1]
