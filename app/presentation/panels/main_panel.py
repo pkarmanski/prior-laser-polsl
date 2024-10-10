@@ -99,8 +99,6 @@ class MainWindow(QMainWindow):
     def update_print_scale_label(self, value):
         self.slider.print_scale_slider_label.setText(f"Scale: {value}")
 
-
-    # TODO: add laser Errors
     def handle_connection_laser(self, ):
         # self.progress_window.show()
         dxf = DXFReader(self.stage_management_grid.get_selected_file)

@@ -1,3 +1,5 @@
+import math
+
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 580
 
@@ -8,14 +10,17 @@ CANVAS_PEN_COLOR = '#000000'
 GRAY_COLOR = '#c8c8c8'
 
 SLIDER_MIN = 1
-SLIDER_MAX = 5
+SLIDER_MAX = 100
+SLIDER_TIC = 1
 
 PRESENTATION_OFFSET = 20
 
+new_scale = range(1, 101)
+
+min_val = math.log10(0.01)
+max_val = math.log10(100)
+
 SCALE_MAPPING = {
-    1: 1000,
-    2: 1,
-    3: .2,
-    4: 0.05,
-    5: .03,
+    i: 10 ** (max_val - (i - 1) * (max_val - min_val) / 99)
+    for i in new_scale
 }

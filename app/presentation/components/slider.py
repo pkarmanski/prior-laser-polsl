@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout, QSlider, QLabel
-from app.consts.presentation_consts import SLIDER_MAX, SLIDER_MIN
+from app.consts.presentation_consts import SLIDER_MAX, SLIDER_MIN, SLIDER_TIC
 
 
 class Slider(QVBoxLayout):
@@ -15,7 +15,7 @@ class Slider(QVBoxLayout):
         self.print_scale_slider.setMinimum(SLIDER_MIN)
         self.print_scale_slider.setMaximum(SLIDER_MAX)
         self.print_scale_slider.setTickPosition(QSlider.TicksBelow)
-        self.print_scale_slider.setTickInterval(SLIDER_MIN)
+        self.print_scale_slider.setTickInterval(SLIDER_TIC)
         self.print_scale_slider_label.setObjectName('scale-info-element')
         self.addWidget(self.print_scale_slider_label)
         self.addWidget(self.print_scale_slider)
