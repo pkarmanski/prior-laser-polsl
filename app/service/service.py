@@ -108,7 +108,7 @@ class Service:
         self.__stage_dao.set_position(0, 0)
 
         # checking width and height
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(10000, 10000)   # TODO: parameter
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(10000, 10000)
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -129,10 +129,7 @@ class Service:
 
         if position:
             self.set_service_params(position[0], position[1], canvas_width, canvas_height)
-            self.__stage_dao.goto_position(int(position[0]/2), int(position[1]/2), speed=10000)
-            while self.__stage_dao.get_running().data:
-                time.sleep(1)
-            self.__stage_dao.set_position(0, 0)
+
         return ServiceError.OK
 
     @staticmethod
@@ -167,7 +164,6 @@ class Service:
                 self.__logger.info(positions_response.data)
             time.sleep(0.2)
 
-    # TODO: proper laser switching and consider triggers
     def print_lines(
             self, lines: List[List[Tuple[int, int]]], dxf_figures: List[Entity], from_canvas: bool, scale: int
     ):
