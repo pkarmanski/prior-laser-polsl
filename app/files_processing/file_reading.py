@@ -36,14 +36,11 @@ class DXFReader:
         figures = [self.get_coordinates(entity) for entity in msp]
         return figures
 
-    @staticmethod
-    def get_coordinates(entity) -> Entity:
-        # for entity in msp:
+    def get_coordinates(self, entity) -> Entity:
         entity_type = entity.dxftype()
 
         match entity_type:
             case Figures.LINE.value:
-                # print([(entity.dxf.start.x, entity.dxf.start.y,), (entity.dxf.end.x, entity.dxf.end.y,)])
                 return Entity(coords=[(entity.dxf.start.x, entity.dxf.start.y,), (entity.dxf.end.x, entity.dxf.end.y,)],
                               entity_type=Figures.LINE)
 
@@ -86,17 +83,17 @@ class DXFReader:
                               entity_type=Figures.POLYLINE)
 
             case Figures.LWPOLYLINE.value:
+                # FIXME: Drawing LWPOLYLINE must be fixed and checked
                 point, start_width, end_width, bulge = entity
-                print(f"{point=}, {start_width=}, {end_width=}, {bulge=}")
-                # spline_curve = entity.construction_tool()
-                # points = list(spline_curve.flattening(0.01))
-                # return Entity(coords=[(p.x, p.y,) for p in points],
-                #               entity_type=Figures.LWPOLYLINE)
+                spline_curve = entity.construction_tool()
+                points = list(spline_curve.flattening(0.01))
+                return Entity(coords=[(p.x, p.y,) for p in points],
+                              entity_type=Figures.LWPOLYLINE)
             case Figures.SPLINE.value:
                 control_points = np.array(entity.control_points)
                 control_points = control_points[:, :2]
 
                 return Entity(coords=control_points, entity_type=Figures.SPLINE)
             case _:
-                print(entity_type)
+                self.__logger.warning(f"Unsupported entity type: {entity_type}")
                 return Entity(coords=[],  entity_type=Figures.NONE)
