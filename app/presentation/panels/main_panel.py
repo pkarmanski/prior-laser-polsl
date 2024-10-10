@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 from threading import Thread
 from app.enums.service_errors import ServiceError
+from app.files_processing.models import Entity
 from app.presentation.components.canvas.canvas import Canvas
 from app.presentation.components.com_port_grid import ComPortsGrid
 from app.presentation.components.menu_bar import MenuBar
@@ -126,7 +127,7 @@ class MainWindow(QMainWindow):
                                    notification_variant=NotificationVariant.Error)
 
     def setup_actions(self, calibration: Callable[[int, int], ServiceError],
-                      laser_write: Callable[[List[List[Tuple[int, int]]], str, bool, int], None],
+                      laser_write: Callable[[List[List[Tuple[int, int]]], List[Entity], bool, int], None],
                       prior_init: Callable[[str], ServiceError],
                       laser_init: Callable[[str], ServiceError],
                       stage_info: Callable[[], List],

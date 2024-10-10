@@ -9,6 +9,7 @@ from typing import Union
 from PyQt5.QtWidgets import QApplication
 
 from app.presentation.panels.main_panel import MainWindow
+from app.presentation.services.canvas_drawing import CanvasDrawingService
 from app.service.service import Service
 
 
@@ -32,7 +33,7 @@ class WindowController:
                                         self.__service.init_prior,
                                         self.__service.init_laser,
                                         self.__service.get_stage_info,
-                                        self.__service.draw_file_preview)
+                                        CanvasDrawingService.draw_file_preview)
         self.__main_panel.show()
         self.app.exec_()
 

@@ -14,13 +14,11 @@ from app.enums.service_errors import ServiceError
 from app.laser.laser_connector import LaserConnector
 from app.laser.laser_dao import LaserDAO
 from app.models.service_models import StageStatus, ServiceAppParams
-from app.presentation.components.canvas.canvas import Canvas
 from app.stage.daos.prior_connector import PriorConnector
 from app.stage.daos.stage_dao import StageDAO
 from app.stage_utils.utils import StageUtils
 from app.stage_utils.yaml_manager import YamlData
 from app.files_processing.models import Entity
-from app.presentation.services.canvas_drawing import CanvasDrawingService
 from typing import List, Tuple
 
 
@@ -269,18 +267,3 @@ class Service:
         else:
             x, y = "NONE", "NONE"
         return [x, y, self.__stage_dao.get_running()]
-
-    def draw_file_preview(self, check_box_click: bool, selected_file: str, canvas: Canvas, scale: int):
-        if selected_file == "":
-            return
-
-        if check_box_click:
-            return
-
-        canvas.clear_canvas()
-
-        self.__dxf_reader = DXFReader(selected_file)
-        dxf_file = self.__dxf_reader.get_dxf_file()
-        if dxf_file:
-            canvas.update_scale(scale)
-            canvas.update_figures(figures=self.__dxf_reader.get_figures())

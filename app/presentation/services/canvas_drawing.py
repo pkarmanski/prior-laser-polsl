@@ -1,10 +1,10 @@
-import math
 from typing import List
 
 from PyQt5.QtCore import Qt, QPoint, QRect, QPointF
 from PyQt5.QtGui import QPainter, QPen, QTransform
 
 from app.files_processing.enums import Figures
+from app.files_processing.file_reading import DXFReader
 from app.files_processing.models import Entity
 from app.presentation.window_utils.window_utils import WindowUtils
 from app.consts.presentation_consts import SCALE_MAPPING
@@ -131,3 +131,19 @@ class CanvasDrawingService:
         for i in range(len(coords) - 1):
             painter.drawLine(coords[i][0], coords[i][1],
                              coords[i + 1][0], coords[i + 1][1])
+
+    @staticmethod
+    def draw_file_preview(check_box_click: bool, selected_file: str, canvas, scale: int):
+        if selected_file == "":
+            return
+
+        if check_box_click:
+            return
+
+        canvas.clear_canvas()
+
+        dxf_reader = DXFReader(selected_file)
+        dxf_file = dxf_reader.get_dxf_file()
+        if dxf_file:
+            canvas.update_scale(scale)
+            canvas.update_figures(figures=dxf_reader.get_figures())
