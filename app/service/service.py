@@ -36,8 +36,6 @@ class Service:
         self.__is_prior_connected = False
         self.__logger = logging.getLogger(__name__)
 
-    # FIXME needs to be executed in other thread
-    # FIXME Timeout needs to be added
     def init_prior(self, com_port: str) -> ServiceError:
         try:
             com_port = int(com_port[3:])
@@ -85,7 +83,7 @@ class Service:
                                                      scale_y=stage_height / canvas_height)
 
     def calibrate(self, canvas_width: int, canvas_height: int) -> ServiceError:
-        move_at_velocity_response = self.__stage_dao.move_at_velocity(-10000, -10000) # TODO: parameter
+        move_at_velocity_response = self.__stage_dao.move_at_velocity(-10000, -10000)
         if move_at_velocity_response.error.error != ServiceError.OK:
             return ServiceError.STAGE_CALIBRATION_ERROR
         limits = 0
@@ -166,7 +164,6 @@ class Service:
             self, lines: List[List[Tuple[int, int]]], dxf_figures: List[Entity], from_canvas: bool, scale: int
     ):
         if from_canvas:
-            # FIXME: do we need this scale?
             scaled_lines = [StageUtils.scale_list_points(line, scale, scale) for line in lines]
             for line in scaled_lines:
                 self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)

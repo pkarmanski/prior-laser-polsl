@@ -83,7 +83,6 @@ class DXFReader:
                               entity_type=Figures.POLYLINE)
 
             case Figures.LWPOLYLINE.value:
-                # FIXME: Drawing LWPOLYLINE must be fixed and checked
                 point, start_width, end_width, bulge = entity
                 spline_curve = entity.construction_tool()
                 points = list(spline_curve.flattening(0.01))

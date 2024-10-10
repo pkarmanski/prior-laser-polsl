@@ -64,7 +64,7 @@ class StageDAO:
     def get_position(self) -> DaoResponse[List]:
         try:
             command = CommandsFactory.get_position()
-            position = self.__stage.execute(command)  # TODO check behaviour
+            position = self.__stage.execute(command)
             self.__logger.info('**************************')
             position = [int(coordinate) for coordinate in position.split(',')]
             self.position = position
@@ -89,7 +89,7 @@ class StageDAO:
     def stop_stage(self) -> DaoResponse[bool]:
         try:
             command = CommandsFactory.stop_smoothly()
-            stopped = self.__stage.execute(command)  # TODO check behaviour
+            stopped = self.__stage.execute(command)
             return DaoResponse[bool](data=stopped == 0, error=DaoError(error=ServiceError.OK, description=""))
         except StageExecuteError as err:
             return DaoResponse[bool](data=None, error=DaoError(error=ServiceError.STAGE_ERROR,

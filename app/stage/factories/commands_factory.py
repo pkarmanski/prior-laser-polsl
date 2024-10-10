@@ -51,17 +51,14 @@ class CommandsFactory:
     def get_position() -> str:
         return ControlCommands.STAGE_POSITION_GET.command
 
-    # TODO test
     @staticmethod
     def set_position(x: int, y: int) -> str:
         return ControlCommands.STAGE_POSITION_SET.command.format(x, y)
 
-    # TODO test
     @staticmethod
     def goto_position(x: int, y: int) -> str:
         return ControlCommands.STAGE_GOTO_POSITION.command.format(x, y)
 
-    # TODO test
     @staticmethod
     def move_relative(x: int, y: int) -> str:
         return ControlCommands.STAGE_MOVE_RELATIVE.command.format(x, y)
@@ -83,7 +80,6 @@ class CommandsFactory:
         return ControlCommands.STAGE_GET_SPEED.command
 
     @staticmethod
-    # TODO: test
     def set_max_speed(speed: int) -> str:
         return ControlCommands.STAGE_SET_SPEED.command.format(speed)
 
@@ -92,7 +88,6 @@ class CommandsFactory:
         return ControlCommands.STAGE_GET_ACC.command
 
     @staticmethod
-    # TODO: test
     def set_max_acc(acc: int) -> str:
         return ControlCommands.STAGE_SET_ACC.command.format(acc)
 
@@ -101,12 +96,10 @@ class CommandsFactory:
         return ControlCommands.STAGE_GET_JERK.command
 
     @staticmethod
-    # TODO: test
     def stage_set_jerk(time: int) -> str:
         return ControlCommands.STAGE_SET_JERK.command.format(time)
 
     @staticmethod
-    # TODO: test
     def enable_joystick(enable: bool) -> str:
         if enable:
             return ControlCommands.ENABLE_JOYSTICK.command
