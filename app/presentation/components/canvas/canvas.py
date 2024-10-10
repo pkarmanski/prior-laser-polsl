@@ -1,7 +1,7 @@
-
+from typing import List
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QPainter
-
+from app.files_processing.models import Entity
 from app.presentation.components.canvas.basic_canvas import BasicCanvas
 from app.presentation.services.canvas_drawing import CanvasDrawingService
 
@@ -78,3 +78,7 @@ class Canvas(BasicCanvas):
 
     def update_scale(self, scale: int) -> None:
         self.__scale = scale
+
+    @property
+    def get_scaled_figures(self) -> List[Entity]:
+        return CanvasDrawingService().get_scaled_figures(self.__figures, self.__scale)

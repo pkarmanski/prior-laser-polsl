@@ -13,6 +13,13 @@ from app.presentation.services.figures_transition import FiguresTransitionServic
 
 class CanvasDrawingService:
     @classmethod
+    def get_scaled_figures(cls, entities: List[Entity], scale: int) -> List[Entity]:
+        scaling_factor = SCALE_MAPPING[scale]
+        transition_service = FiguresTransitionService(scaling_factor)
+
+        return transition_service.apply_offset(entities)
+
+    @classmethod
     def draw(cls, painter: QPainter, entities: List[Entity], scale: int) -> None:
         pen = QPen(Qt.black, 2, Qt.SolidLine)
         painter.setPen(pen)

@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
         )
         self.stage_management_grid.button_start.clicked.connect(
             lambda: laser_write(self.canvas.get_points,
-                                self.stage_management_grid.get_selected_file,
+                                self.canvas.get_scaled_figures,
                                 self.stage_management_grid.from_canvas_checkbox.isChecked(),
                                 self.print_scale_slider.value())
         )

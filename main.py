@@ -10,4 +10,7 @@ fileConfig('logging.conf')
 if __name__ == "__main__":
     logging.info("***********************")
     logging.info("Application start")
-    WindowController().run()
+    try:
+        WindowController().run()
+    except Exception as e:
+        logging.error(e)

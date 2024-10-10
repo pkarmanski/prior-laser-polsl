@@ -168,8 +168,11 @@ class Service:
             time.sleep(0.2)
 
     # TODO: proper laser switching and consider triggers
-    def print_lines(self, lines: List[List[Tuple[int, int]]], dxf_file_path: str, from_canvas: bool, scale: int):
+    def print_lines(
+            self, lines: List[List[Tuple[int, int]]], dxf_figures: List[Entity], from_canvas: bool, scale: int
+    ):
         if from_canvas:
+            # FIXME: do we need this scale?
             scaled_lines = [StageUtils.scale_list_points(line, scale, scale) for line in lines]
             for line in scaled_lines:
                 self.__stage_dao.goto_position(line[-1][0], line[-1][1], speed=10000)
@@ -200,12 +203,7 @@ class Service:
                 self.__laser_dao.turn_laser(False)
             return ServiceError.OK
         else:
-            if dxf_file_path:
-                self.__dxf_reader = DXFReader(dxf_file_path)
-                dxf_file = self.__dxf_reader.get_figures()
-                if dxf_file:
-                    return self.draw(dxf_file)
-            return ServiceError.DXF_ERROR
+            return self.draw(dxf_figures)
 
     def draw_circles(self, radius: int, duration: int = 10, points: int = 200):
         dt = duration / points
@@ -234,7 +232,7 @@ class Service:
 
         self.__stage_dao.stop_stage()
 
-    def draw(self, entities: list[Entity]):
+    def draw(self, entities: List[Entity]):
         for entity in entities:
             coords = entity.coords
             entity_type = entity.entity_type
@@ -254,10 +252,10 @@ class Service:
                 center_point = coords[1]
                 end_point = coords[2]
                 angle = StageUtils.calculate_arc_angle(start_point, center_point, end_point)
-                self.draw_arc(radius, angle)
+                self.draw_arc(int(radius), angle)
 
             elif entity_type == Figures.CIRCLE:
-                self.draw_circles(radius=radius, duration=10)
+                self.draw_circles(radius=int(radius), duration=10)
             elif entity_type == Figures.NONE:
                 pass
             while self.__stage_dao.get_running().data:
