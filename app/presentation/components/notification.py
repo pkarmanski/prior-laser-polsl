@@ -10,7 +10,6 @@ class Notification(QWidget):
         super(QWidget, self).__init__(parent=None)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setStyleSheet("background: #d3d7cf; padding: 0;")
-        self.mainLayout = QVBoxLayout(self)
         self.message_box = QMessageBox()
         self.message_box.setWindowFlags(Qt.FramelessWindowHint)
         self.customize(variant)

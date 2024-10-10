@@ -24,3 +24,8 @@ SCALE_MAPPING = {
     i: 10 ** (max_val - (i - 1) * (max_val - min_val) / 99)
     for i in new_scale
 }
+
+
+MAIN_PANEL_MIN_X = 1200
+MAIN_PANEL_MIN_Y = 700
+

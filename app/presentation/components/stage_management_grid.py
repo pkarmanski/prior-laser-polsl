@@ -43,11 +43,3 @@ class StageManagementGrid(BasicGrid):
 
     def get_from_canvas_checkbox_state(self) -> bool:
         return self.from_canvas_checkbox.isChecked()
-
-    # def get_value(self) -> str:
-    #     input_value = self.intput_field.text()
-    #     try:
-    #         value = str(input_value)
-    #     except ValueError:
-    #         value = '0'
-    #     return value

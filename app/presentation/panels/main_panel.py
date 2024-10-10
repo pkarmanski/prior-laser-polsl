@@ -2,6 +2,8 @@ from typing import Callable, List, Tuple
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
 from threading import Thread
+
+from app.consts.presentation_consts import MAIN_PANEL_MIN_X, MAIN_PANEL_MIN_Y
 from app.enums.service_errors import ServiceError
 from app.files_processing.models import Entity
 from app.presentation.components.canvas.canvas import Canvas
@@ -14,7 +16,6 @@ from app.presentation.components.stage_management_grid import StageManagementGri
 from app.presentation.enums.notification_variant import NotificationVariant
 from app.presentation.icons.icons import Icons
 from app.presentation.panels.processing_panel import ProcessingPanel
-from app.files_processing.file_reading import DXFReader
 from app.presentation.window_utils.window_utils import WindowUtils
 
 
@@ -59,7 +60,7 @@ class MainWindow(QMainWindow):
         widget.setLayout(outer_layout)
         self.setCentralWidget(widget)
 
-        self.setMinimumSize(1200, 700)
+        self.setMinimumSize(MAIN_PANEL_MIN_X, MAIN_PANEL_MIN_Y)
         self.setWindowTitle("LASER")
         self.setWindowIcon(Icons.WINDOW_ICON.get_icon)
         self.setGeometry(100, 100, 100, 500)
