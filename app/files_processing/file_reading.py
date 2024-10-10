@@ -17,7 +17,7 @@ class DXFReader:
     def __init__(self, filename: str):
         self.__logger = logging.getLogger(__name__)
         self.__filename = filename
-        self.__dxf = None
+        self.__dxf: DXFReader
 
         self.__read_dxf_file()
 
