@@ -143,9 +143,6 @@ class MainWindow(QMainWindow):
                                 self.stage_management_grid.from_canvas_checkbox.isChecked(),
                                 self.print_scale_slider.value())
         )
-        self.port_coms_grid.button_connect_stage.clicked.connect(
-            lambda: self.handle_connection_prior(prior_init)
-        )
 
         def on_slider_value_changed(value: int):
             draw_file_preview(
