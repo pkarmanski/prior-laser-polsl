@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QPainter
 from app.files_processing.models import Entity
@@ -82,3 +82,8 @@ class Canvas(BasicCanvas):
     @property
     def get_scaled_figures(self) -> List[Entity]:
         return CanvasDrawingService().get_scaled_figures(self.__figures, self.__scale)
+
+    @property
+    def get_points(self) -> List[Tuple[float, float]]:
+        return self.__lines
+

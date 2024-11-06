@@ -14,7 +14,7 @@ from app.presentation.services.figures_transition import FiguresTransitionServic
 class CanvasDrawingService:
     @classmethod
     def get_scaled_figures(cls, entities: List[Entity], scale: int) -> List[Entity]:
-        scaling_factor = SCALE_MAPPING[scale]
+        scaling_factor = SCALE_MAPPING[scale]   # TODO: it should be divided / multiplied by a factor to match stage dimensions
         transition_service = FiguresTransitionService(scaling_factor)
 
         return transition_service.apply_offset(entities)

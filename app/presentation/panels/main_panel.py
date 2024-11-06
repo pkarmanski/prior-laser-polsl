@@ -1,3 +1,4 @@
+import time
 from typing import Callable, List, Tuple
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QHBoxLayout
@@ -87,12 +88,14 @@ class MainWindow(QMainWindow):
         self.enable_buttons(False)
 
         calibration_result = calibration(self.canvas.width(), self.canvas.height())
+        time.sleep(5)
         if calibration_result == ServiceError.OK:
             self.show_notification(title="CALIBRATION",
                                    message="Calibration is finished successfully",
                                    notification_variant=NotificationVariant.Success)
 
             self.enable_buttons(True)
+            return
         self.show_notification(title="CALIBRATION",
                                message="An error occurred during calibration",
                                informative_text=calibration_result.STAGE_CALIBRATION_ERROR.value,
@@ -134,16 +137,6 @@ class MainWindow(QMainWindow):
                       stage_info: Callable[[], List],
                       draw_file_preview: Callable[[bool, str, Canvas, int], None]):
 
-        self.stage_management_grid.button_calibration.clicked.connect(
-            lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
-        )
-        self.stage_management_grid.button_start.clicked.connect(
-            lambda: laser_write(self.canvas.get_points,
-                                self.canvas.get_scaled_figures,
-                                self.stage_management_grid.from_canvas_checkbox.isChecked(),
-                                self.print_scale_slider.value())
-        )
-
         def on_slider_value_changed(value: int):
             draw_file_preview(
                 self.stage_management_grid.from_canvas_checkbox.isChecked(),
@@ -153,6 +146,16 @@ class MainWindow(QMainWindow):
             )
 
         self.slider.print_scale_slider.valueChanged.connect(on_slider_value_changed)
+
+        self.stage_management_grid.button_calibration.clicked.connect(
+            lambda: Thread(target=self.handle_calibration_result, args=(calibration,), daemon=True).start()
+        )
+        self.stage_management_grid.button_start.clicked.connect(
+            lambda: laser_write(self.canvas.get_points,
+                                self.canvas.get_scaled_figures,
+                                self.stage_management_grid.from_canvas_checkbox.isChecked(),
+                                self.slider.print_scale_slider.value())
+        )
 
         self.stage_info_grid.start_timer(stage_info)
 
@@ -171,8 +174,10 @@ class MainWindow(QMainWindow):
                           informative_text: str = None,
                           notification_variant: NotificationVariant = NotificationVariant.Success,
                           timeout=3000):
-        notification = Notification(notification_variant)
-        notification.notify(title, message, informative_text)
+        pass
+        # FIXME: test and fix notifications
+        # notification = Notification(notification_variant)
+        # notification.notify(title, message, informative_text)
 
     def enable_buttons(self, enabled: bool = True):
         for button in self.buttons_list:

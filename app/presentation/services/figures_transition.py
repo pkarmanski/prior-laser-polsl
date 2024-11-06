@@ -9,6 +9,10 @@ class FiguresTransitionService:
         self.scale = scale
 
     def apply_offset(self, figures: list[Entity]) -> list[Entity]:
+        # in case there is "from_canvas" selected
+        if not figures:
+            return []
+
         x_offset, y_offset = self.get_offset(figures)
         for entity in figures:
             coords = entity.coords
